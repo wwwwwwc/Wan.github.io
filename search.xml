@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Robust DRL学习笔记（2）</title>
+    <url>/2022/02/27/Robust%20DRL-2/</url>
+    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Safe Model-based Reinforcement Learning with Stability Guarantees</strong><br><span id="more"></span></p>
+<p>Felix Berkenkamp Matteo Turchetta Angela P. Schoellig  Angela P. Schoellig ETH Zurich</p>
+<p>NIPS2017</p>
+<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>作者为DRL策略学习和更新过程中提供了高概率安全保证，展示了如何从初始的安全策略开始，通过收集安全区域内的数据来扩展对吸引域的估计，并调整策略以增加吸引域和提高控制效果。</p>
+<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p><strong>safe-RL:</strong></p>
+<p>model-free的方法主要集中于构建风险敏感型RL。例如：(1)在奖励函数中指定避险行为(2)安全探索MDP;</p>
+<p>model-based 方法主要集中在状态约束方面的安全性，例如：对不确定的环境约束进行建模；</p>
+<p><strong>稳定性证明:</strong></p>
+<p>（1）对于known system的稳定性可以使用李亚普诺夫函数来验证</p>
+<p>（2）通过对未知的系统部分利用DP进行估计建模，也可用李亚普诺夫函数来验证</p>
+<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><p>研究对象的状态方程：</p>
+<script type="math/tex; mode=display">
+\mathbf{x}_{t+1}=f\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)=h\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)+g\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)</script><p>x：状态 u：控制动作 h()已知的系统动态 g()未知的模型误差</p>
+<p>$\pi$：$X \rightarrow U$ 最终目标设定为x转为0</p>
+<p>$r(x, u)$：作者用该变量定义该状态下执行该动作的<strong>cost</strong>（正），故$r(0,0)=0$</p>
+<p>目标：从交互数据中安全地了解系统的状态方程（因为有unknown model），并调整策略使discounted costs变小。</p>
+<p><strong>假设1（连续性）：</strong>h() g() $\pi$满足李普希茨连续条件，其李普希茨常数依次为$L_h,L_g,L_\pi$</p>
+<p><em>李普希茨条件的通俗含义：存在一个实数L，使得对于函数 f（x）上的每对点，连接它们的线的斜率的绝对值不大于这个实数L。最小的L称为该函数的Lipschitz常数。（满足李普希茨条件的函数是一个比满足一致连续更光滑的连续函数）</em></p>
+<p><strong>假设2（校准良好的模型）：</strong>假设对n个噪声数据的测量的均值和方差为$\mu_{n}$和$\sigma_{n}$，存在一个常数$\beta_{n}&gt;0$，使得对于所有的n&gt;0,x,u，以$1-\delta$的置信度满足：$\left|f(\mathbf{x}, \mathbf{u})-\mu_{n}(\mathbf{x}, \mathbf{u})\right|_{1} \leq \beta_{n} \sigma_{n}(\mathbf{x}, \mathbf{u})$</p>
+<p>Lyapunov函数：$v(0)=0,v(x)&gt;0$</p>
+<p><strong>理论1：</strong>$L,f$分别表示李雅普诺夫方差和满足李普希茨连续条件的系统状态方程，如果对于所有在吸引域$V(c)$中的状态x，均有$v(f(\mathbf{x}, \pi(\mathbf{x})))<v(\mathbf{x})$。其中，$\mathcal{V}(c)=\{\mathbf{x} \in \mathcal{x} \backslash\{\mathbf{0}\} \mid v(\mathbf{x}) \leq c\}, c>0$，则系统是稳定的。</v(\mathbf{x})$。其中，$\mathcal{V}(c)=\{\mathbf{x}></p>
+<p><em>相当于利用李雅普诺夫的递减条件取代了复杂的稳定检验（状态收敛到 0的检验）</em></p>
+<p>对于DRL，由于价值函数满足：$v(\mathbf{x})=r(\mathbf{x}, \pi(\mathbf{x}))+v(f(\mathbf{x}, \pi(\mathbf{x})) \leq v(f(\mathbf{x}, \pi(\mathbf{x})))$，本身就是一个很好的候选李雅普诺夫函数。</p>
+<p><em>Q1：所以说 作者前面定义cost用错符号了？</em></p>
+<p>初始安全策略：假设有个初始策略，可以使得原点在某个很小的状态集$S_0^x$内渐近稳定</p>
+<p>定义$v(f(\cdot))$的上界和下界分别是$u_n(x)$和$l_n(x)$。则稳定性保证可以变为$v(f(\mathbf{x}, \mathbf{u})) \leq u_{n}(\mathbf{x})&lt;v(\mathbf{x}) \text { for all } \mathbf{x} \in \mathcal{V}(c)$</p>
+<p>作者认为理论1是针对连续x而言的，实际验证起来很困难，所以扩展到了离散域。</p>
+<p><strong>理论2：</strong>将状态空间$X$扩展到离散域$X_{\tau}$，离散域里的点和连续域的点之间的L1范数很小 $\left|\mathbf{x}-[\mathbf{x}]_{\tau}\right|_{1} \leq \tau$，对于所有既属于该离散域又属于吸引域的状态x而言，若满足$u_{n}(\mathbf{x}, \mathbf{u})&lt;v(\mathbf{x})-L_{\Delta v} \tau$，则该域内以$1-\delta$的置信度满足$v(f(\mathbf{x}, \pi(\mathbf{x})))&lt;v(\mathbf{x})$，其中，$L_{\Delta v}:=L_{v} L_{f}\left(L_{\pi}+1\right)+L_{v}$。</p>
+<p>定义满足递减条件的所有状态-动作集合：</p>
+<p>$\mathcal{D}_{n}=\left\{(\mathbf{x}, \mathbf{u}) \in \mathcal{X}_{\tau} \times \mathcal{U} \mid u_{n}(\mathbf{x}, \mathbf{u})-v(\mathbf{x})&lt;-L_{\Delta v} \tau\right\}$</p>
+<p>RL策略目标是找到一个<strong>尽可能大的吸引域</strong>，使得其中所有的$(x, \pi_x)$均在$D$内：</p>
+<script type="math/tex; mode=display">
+\pi_{n}, c_{n}=\underset{\pi \in \Pi_{L}, c \in \mathbb{R}_{>0}}{\operatorname{argmax}} c, \quad \text { such that for all } \mathbf{x} \in \mathcal{V}(c) \cap \mathcal{X}_{\tau}:(\mathbf{x}, \pi(\mathbf{x})) \in \mathcal{D}_{n}</script><p><strong>理论3：</strong>假设实际的吸引域为$R_{\pi_n}$，则在策略$\pi_n$下，对于$\delta \in (0,1)$，至少有$（1-\delta）$的置信度认为$\mathcal{V}\left(c_{n}\right) \subseteq \mathcal{R}_{\pi_{n}}$ ($n&gt;0$)。 </p>
+<p>除此之外，作者提出不仅需要将当前状态限制在$V(C)$中，对于该状态下采取控制动作后转移的次态也要在$V(C)$中：</p>
+<script type="math/tex; mode=display">
+\mathcal{S}_{n}=\bigcup_{\mathbf{z} \subset \mathcal{S_{n-1}}}\left\{\mathbf{z}^{\prime} \in \mathcal{V}\left(c_{n}\right) \cap \mathcal{X}_{\tau} \times \mathcal{U}_{\tau} \mid u_{n}(\mathbf{z})+L_{v} L_{f}\left\|\mathbf{z}-\mathbf{z}^{\prime}\right\|_{1} \leq c_{n}\right\}</script><p>其算法伪代码为：</p>
+<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226150644884.png" alt="伪代码"></p>
+<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151031162.png" alt="image-20220226151031162"></p>
+<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151118226.png" alt="image-20220226151118226"></p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151236997.png" alt="image-20220226151236997"></p>
+<p><em>吸引域本身在变大 同时更多状态落在吸引域中</em></p>
+<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151322970.png" alt="image-20220226151322970"></p>
+]]></content>
+      <categories>
+        <category>论文解读</category>
+      </categories>
+      <tags>
+        <tag>Robust DRL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Robust DRL学习笔记（1）</title>
     <url>/2022/02/23/Robust-DRL-1/</url>
     <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>End-to-End Safe Reinforcement Learning through Barrier Functions for Safety-Critical Continuous Control Tasks</strong></p>

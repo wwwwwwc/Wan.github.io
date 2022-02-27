@@ -20,27 +20,26 @@
     var CONFIG = {"hostname":"waunx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="论文信息End-to-End Safe Reinforcement Learning through Barrier Functions for Safety-Critical Continuous Control Tasks">
+  <meta name="description" content="论文信息Safe Model-based Reinforcement Learning with Stability Guarantees">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Robust DRL学习笔记（1）">
-<meta property="og:url" content="https://waunx.github.io/2022/02/23/Robust-DRL-1/index.html">
+<meta property="og:title" content="Robust DRL学习笔记（2）">
+<meta property="og:url" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/index.html">
 <meta property="og:site_name" content="Wanxu&#39;s notes">
-<meta property="og:description" content="论文信息End-to-End Safe Reinforcement Learning through Barrier Functions for Safety-Critical Continuous Control Tasks">
+<meta property="og:description" content="论文信息Safe Model-based Reinforcement Learning with Stability Guarantees">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic4.zhimg.com/v2-3c25a927c217f13a055794377635faaf_r.jpg">
-<meta property="og:image" content="https://waunx.github.io/2022/02/23/Robust-DRL-1/image-20220223093018926.png">
-<meta property="og:image" content="https://waunx.github.io/2022/02/23/Robust-DRL-1/image-20220223093216487.png">
-<meta property="og:image" content="https://waunx.github.io/2022/02/23/Robust-DRL-1/image-20220223093310526.png">
-<meta property="og:image" content="https://waunx.github.io/2022/02/23/Robust-DRL-1/image-20220223093421936.png">
-<meta property="og:image" content="https://waunx.github.io/2022/02/23/Robust-DRL-1/image-20220223093700054.png">
-<meta property="article:published_time" content="2022-02-22T21:36:30.000Z">
-<meta property="article:modified_time" content="2022-02-23T12:44:34.691Z">
+<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226150644884.png">
+<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226151031162.png">
+<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226151118226.png">
+<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226151236997.png">
+<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226151322970.png">
+<meta property="article:published_time" content="2022-02-26T21:36:30.000Z">
+<meta property="article:modified_time" content="2022-02-27T01:33:32.527Z">
 <meta property="article:author" content="Wan Xu">
 <meta property="article:tag" content="Robust DRL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pic4.zhimg.com/v2-3c25a927c217f13a055794377635faaf_r.jpg">
+<meta name="twitter:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226150644884.png">
 
-<link rel="canonical" href="https://waunx.github.io/2022/02/23/Robust-DRL-1/">
+<link rel="canonical" href="https://waunx.github.io/2022/02/27/Robust%20DRL-2/">
 
 
 <script id="page-configurations">
@@ -53,7 +52,7 @@
   };
 </script>
 
-  <title>Robust DRL学习笔记（1） | Wanxu's notes</title>
+  <title>Robust DRL学习笔记（2） | Wanxu's notes</title>
   
 
 
@@ -199,7 +198,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/02/23/Robust-DRL-1/">
+    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/02/27/Robust%20DRL-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/photo.jpg">
@@ -212,7 +211,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Robust DRL学习笔记（1）
+          Robust DRL学习笔记（2）
         </h1>
 
         <div class="post-meta">
@@ -222,14 +221,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-02-22 21:36:30" itemprop="dateCreated datePublished" datetime="2022-02-22T21:36:30Z">2022-02-22</time>
+              <time title="创建时间：2022-02-26 21:36:30" itemprop="dateCreated datePublished" datetime="2022-02-26T21:36:30Z">2022-02-26</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-23 12:44:34" itemprop="dateModified" datetime="2022-02-23T12:44:34Z">2022-02-23</time>
+                <time title="修改时间：2022-02-27 01:33:32" itemprop="dateModified" datetime="2022-02-27T01:33:32Z">2022-02-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -247,7 +246,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.1k</span>
+              <span>3k</span>
             </span>
 
         </div>
@@ -259,56 +258,48 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>End-to-End Safe Reinforcement Learning through Barrier Functions for Safety-Critical Continuous Control Tasks</strong></p>
-<span id="more"></span>
-<p>Richard Cheng Richard M. Murray Joel W. Burdick  California Institute of Technology </p>
-<p>AAAI2019</p>
-<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>在无模型的DRL上通过基于模型信息构建的CBF控制器来修正RL决策（这里作者考虑了CBF“仅仅修正RL的决策动作”和“既考虑修正DRL，又考虑影响DRL的更新”两部分）。</p>
-<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p>这篇文章的定位是<strong>可验证的“safe-RL”</strong>，作者认为RL在探索过程中侧重于最大化长期回报，这可能会在学习过程中探索到不安全的行为，这在实际系统中是不允许的</p>
-<p>针对safe-RL研究而言，作者从model-free &amp; model-based角度进行现状分析：</p>
-<p><strong>（1）model-free</strong>：文献都较老，主要方法有reward-shaping, policy optimization with constraints or teacher advice，并且无法保证在训练初期也能保证DRL决策的安全性。</p>
-<p><strong>（2）model-based</strong>: Lyapunov-based or MPC or 备用控制器（实际上是引入了一个风险感知算法，在探索阶段 如果感知到该动作会引起较差的响应，则采用备用控制器的安全动作）。前两种方法没有解决探索和性能优化的问题，最后一种方法对探索过程限制过强</p>
-<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><h4 id="模型获取（model-based-CBF的需求）"><a href="#模型获取（model-based-CBF的需求）" class="headerlink" title="模型获取（model-based CBF的需求）"></a>模型获取（model-based CBF的需求）</h4><p>给定$S \rightarrow S$的动力学方程：</p>
+        <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Safe Model-based Reinforcement Learning with Stability Guarantees</strong><br><span id="more"></span></p>
+<p>Felix Berkenkamp Matteo Turchetta Angela P. Schoellig  Angela P. Schoellig ETH Zurich</p>
+<p>NIPS2017</p>
+<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>作者为DRL策略学习和更新过程中提供了高概率安全保证，展示了如何从初始的安全策略开始，通过收集安全区域内的数据来扩展对吸引域的估计，并调整策略以增加吸引域和提高控制效果。</p>
+<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p><strong>safe-RL:</strong></p>
+<p>model-free的方法主要集中于构建风险敏感型RL。例如：(1)在奖励函数中指定避险行为(2)安全探索MDP;</p>
+<p>model-based 方法主要集中在状态约束方面的安全性，例如：对不确定的环境约束进行建模；</p>
+<p><strong>稳定性证明:</strong></p>
+<p>（1）对于known system的稳定性可以使用李亚普诺夫函数来验证</p>
+<p>（2）通过对未知的系统部分利用DP进行估计建模，也可用李亚普诺夫函数来验证</p>
+<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><p>研究对象的状态方程：</p>
 <script type="math/tex; mode=display">
-s_{t+1} = f(s_t) + g(s_t)a_t + d(s_t)</script><p>其中f()代表与a无关的状态，g()中的状态与a有关，d()是不确定项（例如摩擦力和关节柔性）</p>
-<p>由于CBF控制器是model-based的，但精准知道模型是很困难的，尤其是d()。故作者采用<strong>Gaussian Process(GP)</strong>估计d()。</p>
-<p><img src="https://pic4.zhimg.com/v2-3c25a927c217f13a055794377635faaf_r.jpg" alt="Fig.1 高斯过程更新的图（随着数据点的扩充，高斯过程的均值会越来越接近真实值）"></p>
-<p><em>Fig.1 高斯过程更新的图（随着数据点的扩充，高斯过程的均值会越来越接近真实值）</em></p>
-<p>理论上我们用于估计d()的数据越多越好，但由于在高斯过程的$\mu$和$\sigma$的求解过程中涉及到求逆的操作，所以为了实时性考虑，实际上只取最新的1000个数据来训练GP model。</p>
-<h4 id="CBF控制器设计"><a href="#CBF控制器设计" class="headerlink" title="CBF控制器设计"></a>CBF控制器设计</h4><p>定义安全集合$C$：</p>
+\mathbf{x}_{t+1}=f\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)=h\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)+g\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)</script><p>x：状态 u：控制动作 h()已知的系统动态 g()未知的模型误差</p>
+<p>$\pi$：$X \rightarrow U$ 最终目标设定为x转为0</p>
+<p>$r(x, u)$：作者用该变量定义该状态下执行该动作的<strong>cost</strong>（正），故$r(0,0)=0$</p>
+<p>目标：从交互数据中安全地了解系统的状态方程（因为有unknown model），并调整策略使discounted costs变小。</p>
+<p><strong>假设1（连续性）：</strong>h() g() $\pi$满足李普希茨连续条件，其李普希茨常数依次为$L_h,L_g,L_\pi$</p>
+<p><em>李普希茨条件的通俗含义：存在一个实数L，使得对于函数 f（x）上的每对点，连接它们的线的斜率的绝对值不大于这个实数L。最小的L称为该函数的Lipschitz常数。（满足李普希茨条件的函数是一个比满足一致连续更光滑的连续函数）</em></p>
+<p><strong>假设2（校准良好的模型）：</strong>假设对n个噪声数据的测量的均值和方差为$\mu_{n}$和$\sigma_{n}$，存在一个常数$\beta_{n}&gt;0$，使得对于所有的n&gt;0,x,u，以$1-\delta$的置信度满足：$\left|f(\mathbf{x}, \mathbf{u})-\mu_{n}(\mathbf{x}, \mathbf{u})\right|_{1} \leq \beta_{n} \sigma_{n}(\mathbf{x}, \mathbf{u})$</p>
+<p>Lyapunov函数：$v(0)=0,v(x)&gt;0$</p>
+<p><strong>理论1：</strong>$L,f$分别表示李雅普诺夫方差和满足李普希茨连续条件的系统状态方程，如果对于所有在吸引域$V(c)$中的状态x，均有$v(f(\mathbf{x}, \pi(\mathbf{x})))<v(\mathbf{x})$。其中，$\mathcal{V}(c)=\{\mathbf{x} \in \mathcal{x} \backslash\{\mathbf{0}\} \mid v(\mathbf{x}) \leq c\}, c>0$，则系统是稳定的。</v(\mathbf{x})$。其中，$\mathcal{V}(c)=\{\mathbf{x}></p>
+<p><em>相当于利用李雅普诺夫的递减条件取代了复杂的稳定检验（状态收敛到 0的检验）</em></p>
+<p>对于DRL，由于价值函数满足：$v(\mathbf{x})=r(\mathbf{x}, \pi(\mathbf{x}))+v(f(\mathbf{x}, \pi(\mathbf{x})) \leq v(f(\mathbf{x}, \pi(\mathbf{x})))$，本身就是一个很好的候选李雅普诺夫函数。</p>
+<p><em>Q1：所以说 作者前面定义cost用错符号了？</em></p>
+<p>初始安全策略：假设有个初始策略，可以使得原点在某个很小的状态集$S_0^x$内渐近稳定</p>
+<p>定义$v(f(\cdot))$的上界和下界分别是$u_n(x)$和$l_n(x)$。则稳定性保证可以变为$v(f(\mathbf{x}, \mathbf{u})) \leq u_{n}(\mathbf{x})&lt;v(\mathbf{x}) \text { for all } \mathbf{x} \in \mathcal{V}(c)$</p>
+<p>作者认为理论1是针对连续x而言的，实际验证起来很困难，所以扩展到了离散域。</p>
+<p><strong>理论2：</strong>将状态空间$X$扩展到离散域$X_{\tau}$，离散域里的点和连续域的点之间的L1范数很小 $\left|\mathbf{x}-[\mathbf{x}]_{\tau}\right|_{1} \leq \tau$，对于所有既属于该离散域又属于吸引域的状态x而言，若满足$u_{n}(\mathbf{x}, \mathbf{u})&lt;v(\mathbf{x})-L_{\Delta v} \tau$，则该域内以$1-\delta$的置信度满足$v(f(\mathbf{x}, \pi(\mathbf{x})))&lt;v(\mathbf{x})$，其中，$L_{\Delta v}:=L_{v} L_{f}\left(L_{\pi}+1\right)+L_{v}$。</p>
+<p>定义满足递减条件的所有状态-动作集合：</p>
+<p>$\mathcal{D}_{n}=\left\{(\mathbf{x}, \mathbf{u}) \in \mathcal{X}_{\tau} \times \mathcal{U} \mid u_{n}(\mathbf{x}, \mathbf{u})-v(\mathbf{x})&lt;-L_{\Delta v} \tau\right\}$</p>
+<p>RL策略目标是找到一个<strong>尽可能大的吸引域</strong>，使得其中所有的$(x, \pi_x)$均在$D$内：</p>
 <script type="math/tex; mode=display">
-\mathcal{C}:\left\{s \in \mathbb{R}^{n}: h(s) \geq 0\right\}</script><p>CBF就是利用李雅普诺夫函数的推广，给出了<strong>在受控动力学下保证安全集C的前向不变性的充分条件</strong>。</p>
-<p><strong>定义1</strong>：给定安全集合$C$，一个连续可微的函数$h(\cdot)$作为CBF函数，若存在$\eta \in [0, 1]$使得对所有$s_t$，均有：</p>
+\pi_{n}, c_{n}=\underset{\pi \in \Pi_{L}, c \in \mathbb{R}_{>0}}{\operatorname{argmax}} c, \quad \text { such that for all } \mathbf{x} \in \mathcal{V}(c) \cap \mathcal{X}_{\tau}:(\mathbf{x}, \pi(\mathbf{x})) \in \mathcal{D}_{n}</script><p><strong>理论3：</strong>假设实际的吸引域为$R_{\pi_n}$，则在策略$\pi_n$下，对于$\delta \in (0,1)$，至少有$（1-\delta）$的置信度认为$\mathcal{V}\left(c_{n}\right) \subseteq \mathcal{R}_{\pi_{n}}$ ($n&gt;0$)。 </p>
+<p>除此之外，作者提出不仅需要将当前状态限制在$V(C)$中，对于该状态下采取控制动作后转移的次态也要在$V(C)$中：</p>
 <script type="math/tex; mode=display">
-\sup _{a_{t} \in A}\left[h\left(f\left(s_{t}\right)+g\left(s_{t}\right) a_{t}+d\left(s_{t}\right)\right)+(\eta-1) h\left(s_{t}\right)\right] \geq 0</script><p>$\eta$就是CBF区别于LF的主要一项，该变量指的是$a_t$将状态$s_{t+1}$推向安全集合的强度。$h(\cdot)$作者定义为一个基本的势垒函数$h=p^{T} s+q$（<em>though our methodology could support more general barrier functions. This  restriction means the set C is composed of intersecting half spaces (i.e.  polytopes).</em>这段不太理解）</p>
-<p>代入$h(\cdot)$和$d(\cdot)$后，我们可以得到CBF控制器的目标：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-\left(a_{t}, \epsilon\right)=\underset{a_{t}, \epsilon}{\operatorname{argmin}} &\left\|a_{t}\right\|_{2}+K_{\epsilon} \epsilon \\
-\text { s.t. } \quad & p^{T} f\left(s_{t}\right)+p^{T} g\left(s_{t}\right) a_{t}+p^{T} \mu_{d}\left(s_{t}\right)-\\
-& k_{\delta}|p|^{T} \sigma_{d}\left(s_{t}\right)+q \geq(1-\eta) h\left(s_{t}\right)-\epsilon \\
-& a_{\text {low }}^{i} \leq a_{t}^{i} \leq a_{\text {high }}^{i} \text { for } i=1, \ldots, M
-\end{aligned}</script><p>其中$\epsilon$是松弛变量（<em>松弛变量的引入常常是为了便于在<strong>更大的可行域</strong>内求解。若为0，则收敛到原有状态，若大于零，则约束松弛。</em>）</p>
-<p><strong>引理1</strong>：若对于任何$s \in C$，式（4）存在$\epsilon = 0$的解，则该控制器有（1-$\delta$）的概率使得安全集合C是前向不变的（即始终在安全集合内）。若存在$\epsilon=\epsilon^{\max }&gt;0$，则该控制器有（1-$\delta$）的概率使得$\mathcal{C}_{\epsilon}:\left\{s \in \mathbb{R}^{n}: h(s) \geq-\frac{\epsilon}{\eta}\right\}$是前向不变（即始终在限制集合内）。</p>
-<h4 id="基于CBF的强化学习补偿控制"><a href="#基于CBF的强化学习补偿控制" class="headerlink" title="基于CBF的强化学习补偿控制"></a>基于CBF的强化学习补偿控制</h4><script type="math/tex; mode=display">
-u_{k}(s)=u_{\theta_{k}}^{R L}(s)+u_{k}^{C B F}\left(s, u_{\theta_{k}}^{R L}\right)</script><p><img src="/2022/02/23/Robust-DRL-1/image-20220223093018926.png" alt="Fig2 CBF仅补偿RL控制动作"></p>
-<p><em>Fig2 CBF仅补偿RL控制动作</em></p>
-<p>CBF并不影响DRL的policy network的更新，只是做一个调控作用，和背景介绍里的“备用控制器”其实比较相似。</p>
-<h4 id="基于CBF的强化学习引导控制"><a href="#基于CBF的强化学习引导控制" class="headerlink" title="基于CBF的强化学习引导控制"></a>基于CBF的强化学习引导控制</h4><p><img src="/2022/02/23/Robust-DRL-1/image-20220223093216487.png" alt="Fig3 策略迭代过程"></p>
-<p><em>Fig3 策略迭代过程</em></p>
-<p>如果仅利用CBF进行补偿，其控制结果如上图a，RL在第k个更新周期里的策略$\pi_{\theta_{k}}^{RL}$可能是很差的，但实际采取的策略是$\pi_{k}$，RL更新如果从$\pi_{k}$处进行更新（每次更新必然也只是在上次策略的一个小邻域内选择最接近$\pi_{opt}$的动作），$\pi_{\theta_{k+1}}^{RL}$会越来越好，逐渐摆脱CBF的补偿，这才是作者想要的效果。</p>
-<p><img src="/2022/02/23/Robust-DRL-1/image-20220223093310526.png" alt="Fig4 CBF指导强化学习更新"></p>
-<p><em>这里利用历史CBF的求和是因为RL的policy更新如今也是依赖于之前的CBF控制值（在上一次的控制值基础上调节）</em></p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-u_{k}(s)=& u_{\theta_{k}}^{R L}(s)+\sum_{j=0}^{k-1} u_{j}^{C B F}\left(s, u_{\theta_{0}}^{R L}, \ldots, u_{\theta_{j-1}}^{R L}\right) \\
-&+u_{k}^{C B F}\left(s, u_{\theta_{k}}^{R L}+\sum_{j=0}^{k-1} u_{j}^{C B F}\right)
-\end{aligned}</script><p>RL-CBF整体伪代码：</p>
-<p><img src="/2022/02/23/Robust-DRL-1/image-20220223093421936.png" alt="image-20220223093421936"></p>
-<p><em>Tips：k是RL policy更新和GP更新的迭代次数</em></p>
-<h3 id="实验验证"><a href="#实验验证" class="headerlink" title="实验验证"></a>实验验证</h3><p>倒立摆：</p>
-<p><img src="/2022/02/23/Robust-DRL-1/image-20220223093700054.png" alt="*左图表示即使在agent学习的过程中也不会违反安全限制 右图表示最终CBF在实际一个episode里基本不需要补偿*"></p>
-<p><em>左图表示即使在agent学习的过程中也不会违反安全限制 右图表示最终CBF在实际一个episode里基本不需要补偿</em></p>
+\mathcal{S}_{n}=\bigcup_{\mathbf{z} \subset \mathcal{S_{n-1}}}\left\{\mathbf{z}^{\prime} \in \mathcal{V}\left(c_{n}\right) \cap \mathcal{X}_{\tau} \times \mathcal{U}_{\tau} \mid u_{n}(\mathbf{z})+L_{v} L_{f}\left\|\mathbf{z}-\mathbf{z}^{\prime}\right\|_{1} \leq c_{n}\right\}</script><p>其算法伪代码为：</p>
+<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226150644884.png" alt="伪代码"></p>
+<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151031162.png" alt="image-20220226151031162"></p>
+<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151118226.png" alt="image-20220226151118226"></p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151236997.png" alt="image-20220226151236997"></p>
+<p><em>吸引域本身在变大 同时更多状态落在吸引域中</em></p>
+<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151322970.png" alt="image-20220226151322970"></p>
 
     </div>
 
@@ -324,7 +315,7 @@ u_{k}(s)=& u_{\theta_{k}}^{R L}(s)+\sum_{j=0}^{k-1} u_{j}^{C B F}\left(s, u_{\th
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://waunx.github.io/2022/02/23/Robust-DRL-1/" title="Robust DRL学习笔记（1）">https://waunx.github.io/2022/02/23/Robust-DRL-1/</a>
+    <a href="https://waunx.github.io/2022/02/27/Robust%20DRL-2/" title="Robust DRL学习笔记（2）">https://waunx.github.io/2022/02/27/Robust DRL-2/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -343,11 +334,11 @@ u_{k}(s)=& u_{\theta_{k}}^{R L}(s)+\sum_{j=0}^{k-1} u_{j}^{C B F}\left(s, u_{\th
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2022/02/27/Robust%20DRL-2/" rel="next" title="Robust DRL学习笔记（2）">
-      Robust DRL学习笔记（2） <i class="fa fa-chevron-right"></i>
+    <a href="/2022/02/23/Robust-DRL-1/" rel="prev" title="Robust DRL学习笔记（1）">
+      <i class="fa fa-chevron-left"></i> Robust DRL学习笔记（1）
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -406,7 +397,7 @@ u_{k}(s)=& u_{\theta_{k}}^{R L}(s)+\sum_{j=0}^{k-1} u_{j}^{C B F}\left(s, u_{\th
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="nav-number">1.</span> <span class="nav-text">论文信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">基本思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">研究背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%86%85%E5%AE%B9"><span class="nav-number">4.</span> <span class="nav-text">详细内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%8E%B7%E5%8F%96%EF%BC%88model-based-CBF%E7%9A%84%E9%9C%80%E6%B1%82%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">模型获取（model-based CBF的需求）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CBF%E6%8E%A7%E5%88%B6%E5%99%A8%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.2.</span> <span class="nav-text">CBF控制器设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8ECBF%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E8%A1%A5%E5%81%BF%E6%8E%A7%E5%88%B6"><span class="nav-number">4.3.</span> <span class="nav-text">基于CBF的强化学习补偿控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8ECBF%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%BC%95%E5%AF%BC%E6%8E%A7%E5%88%B6"><span class="nav-number">4.4.</span> <span class="nav-text">基于CBF的强化学习引导控制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E9%AA%8C%E8%AF%81"><span class="nav-number">5.</span> <span class="nav-text">实验验证</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="nav-number">1.</span> <span class="nav-text">论文信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">基本思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">研究背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%86%85%E5%AE%B9"><span class="nav-number">4.</span> <span class="nav-text">详细内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">实验结果</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
