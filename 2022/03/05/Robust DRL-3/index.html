@@ -20,26 +20,26 @@
     var CONFIG = {"hostname":"waunx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="论文信息Safe Model-based Reinforcement Learning with Stability Guarantees">
+  <meta name="description" content="论文信息Reinforcement learning control of constrained dynamic systems with uniformly ultimate boundedness stability guarantee">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Robust DRL学习笔记（2）">
-<meta property="og:url" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/index.html">
+<meta property="og:title" content="Robust DRL学习笔记（3）">
+<meta property="og:url" content="https://waunx.github.io/2022/03/05/Robust%20DRL-3/index.html">
 <meta property="og:site_name" content="Wanxu&#39;s notes">
-<meta property="og:description" content="论文信息Safe Model-based Reinforcement Learning with Stability Guarantees">
+<meta property="og:description" content="论文信息Reinforcement learning control of constrained dynamic systems with uniformly ultimate boundedness stability guarantee">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226150644884.png">
-<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226151031162.png">
-<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226151118226.png">
-<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226151236997.png">
-<meta property="og:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226151322970.png">
-<meta property="article:published_time" content="2022-02-26T21:36:30.000Z">
-<meta property="article:modified_time" content="2022-03-04T07:58:21.800Z">
+<meta property="og:image" content="https://waunx.github.io/2022/03/05/Robust%20DRL-3/image-20220227112538366.png">
+<meta property="og:image" content="https://waunx.github.io/2022/03/05/Robust%20DRL-3/image-20220227171257691.png">
+<meta property="og:image" content="https://waunx.github.io/2022/03/05/Robust%20DRL-3/image-20220227193544818.png">
+<meta property="og:image" content="https://waunx.github.io/2022/03/05/Robust%20DRL-3/image-20220227200041471.png">
+<meta property="og:image" content="https://waunx.github.io/2022/03/05/Robust%20DRL-3/image-20220227200051457.png">
+<meta property="article:published_time" content="2022-03-04T16:00:30.000Z">
+<meta property="article:modified_time" content="2022-03-04T08:01:33.723Z">
 <meta property="article:author" content="Wan Xu">
 <meta property="article:tag" content="Robust DRL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://waunx.github.io/2022/02/27/Robust%20DRL-2/image-20220226150644884.png">
+<meta name="twitter:image" content="https://waunx.github.io/2022/03/05/Robust%20DRL-3/image-20220227112538366.png">
 
-<link rel="canonical" href="https://waunx.github.io/2022/02/27/Robust%20DRL-2/">
+<link rel="canonical" href="https://waunx.github.io/2022/03/05/Robust%20DRL-3/">
 
 
 <script id="page-configurations">
@@ -52,7 +52,7 @@
   };
 </script>
 
-  <title>Robust DRL学习笔记（2） | Wanxu's notes</title>
+  <title>Robust DRL学习笔记（3） | Wanxu's notes</title>
   
 
 
@@ -198,7 +198,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/02/27/Robust%20DRL-2/">
+    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/03/05/Robust%20DRL-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/photo.jpg">
@@ -211,7 +211,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Robust DRL学习笔记（2）
+          Robust DRL学习笔记（3）
         </h1>
 
         <div class="post-meta">
@@ -220,16 +220,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-02-26 21:36:30" itemprop="dateCreated datePublished" datetime="2022-02-26T21:36:30Z">2022-02-26</time>
+              <time title="创建时间：2022-03-04 16:00:30 / 修改时间：08:01:33" itemprop="dateCreated datePublished" datetime="2022-03-04T16:00:30Z">2022-03-04</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-04 07:58:21" itemprop="dateModified" datetime="2022-03-04T07:58:21Z">2022-03-04</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -246,7 +240,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3k</span>
+              <span>872</span>
             </span>
 
         </div>
@@ -258,48 +252,93 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Safe Model-based Reinforcement Learning with Stability Guarantees</strong><br><span id="more"></span></p>
-<p>Felix Berkenkamp Matteo Turchetta Angela P. Schoellig  Angela P. Schoellig ETH Zurich</p>
-<p>NIPS2017</p>
-<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>作者为DRL策略学习和更新过程中提供了高概率安全保证，展示了如何从初始的安全策略开始，通过收集安全区域内的数据来扩展对吸引域的估计，并调整策略以增加吸引域和提高控制效果。</p>
-<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p><strong>safe-RL:</strong></p>
-<p>model-free的方法主要集中于构建风险敏感型RL。例如：(1)在奖励函数中指定避险行为(2)安全探索MDP;</p>
-<p>model-based 方法主要集中在状态约束方面的安全性，例如：对不确定的环境约束进行建模；</p>
-<p><strong>稳定性证明:</strong></p>
-<p>（1）对于known system的稳定性可以使用李亚普诺夫函数来验证</p>
-<p>（2）通过对未知的系统部分利用DP进行估计建模，也可用李亚普诺夫函数来验证</p>
-<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><p>研究对象的状态方程：</p>
+        <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Reinforcement learning control of constrained dynamic systems with uniformly ultimate boundedness stability guarantee</strong><br><span id="more"></span></p>
+<p>Minghao Han(HIT) Yuan Tian WeiPan(Delft University of Technology, Netherlands)</p>
+<p>Automatica</p>
+<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>为了解决RL控制的安全问题，传统的方法大多需要了解系统状态方程的全部或部分信息，作者提出了一种方法，不需要了解模型，只从数据出发就能完成UUB稳定性保证。</p>
+<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p><strong>UUB</strong></p>
+<p>UUB保证：轨迹将在有限时间内进入稳定的邻域，并且此后不会从该集合中逃脱</p>
+<p>该稳定性保证以往用于解决自适应动态规划（Adaptive Dynamic Programming），但不可避免的会用到模型结构和模型参数。</p>
+<p><strong>RL with safety constraints</strong></p>
+<p>​    <strong>（1）Safety Constrained Policy Optimization(CPO)</strong></p>
+<p>该方法在一个初始安全的策略下使后续的安全约束得以满足，但受限于on-policy，采样效率低下。（无stability guarantees）</p>
+<p>​    <strong>（2） Lyapunov-based approach</strong></p>
+<p>通过构造李雅普诺夫函数求解带约束的控制问题。但仅保证设计的约束函数的累积保持在阈值以下。（无 stability guarantees）</p>
+<p>​    <strong>（3）model-based RL in Lipschitz continuous deterministic nonlinear systems</strong></p>
+<p>17年nips那篇，笔记2解读过。问题出在其安全性保证是针对状态空间子集中离散点而言的，故限制在低维、简单的系统中。</p>
+<p>​    <strong>（4）model-based CBF controller</strong></p>
+<p>19年aaai那篇，笔记1解读过。问题在于需要一个nominal model。</p>
+<p>​    <strong>（5）expert knowledge+RL</strong></p>
+<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><p><strong>UUB稳定性相关概念</strong></p>
+<p><strong>定义1：</strong>如果存在正的常数$b$和$\eta$，对于任意$\epsilon<b$，存在$T(\epsilon, \eta)$，使得：$\left\|s_{t_0}\right\| < \epsilon \rightarrow\left\|s_{t}\right\|<\eta, \forall t>t_{0}+T$，该系统被称为满足UUB，且以$\eta$为界限。若$\epsilon$可以任意大，则该系统满足全局UUB。</b$，存在$T(\epsilon,></p>
+<p><img src="/2022/03/05/Robust%20DRL-3/image-20220227112538366.png" alt="image-20220227112538366" style="zoom: 50%;"></p>
+<p>上述定义的安全约束仅仅限制在状态的l1范数上，但实际系统的约束函数不一定是采用该约束方法，故作者将定义1更新为：</p>
+<p><strong>定义2：</strong>如果存在正的常数$b$和$\eta$，对于任意$\epsilon&lt;b$，存在$T(\epsilon, \eta)$，使得：$c_{\pi}(s_1) \leq \epsilon \Rightarrow c_{\pi}(s_t)\leq \eta, \forall t \geq T$，该系统被称为满足UUB，且以$c_\pi(\cdot)$为界限。若$\epsilon$可以任意大，则该系统满足全局UUB。</p>
+<p>其中$c_{\pi}(s) \triangleq \mathbb{E}_{a \sim \pi} c(s, a)$。</p>
+<p><strong>Constrained Markov Decision Process(CMDP)：</strong></p>
+<p>$\max _{\pi} J(\pi)$ s.t. $\mathbb{E}_{s_{t}} c_{\pi}\left(s_{t}\right) \leq d, \forall t \in[1, \infty)$</p>
+<p>$J(\pi)$是MDP的目标，加上了安全约束就变成了CMDP。</p>
+<p>假设初始状态$S_1$（其概率密度函数定义为$\rho\left(S_{1}\right)$）是在安全域内，即：初始状态从$\Gamma$域内进行选择：$\Gamma \triangleq\left\{s \mid c_{\pi}(s) \leq b\right\}$</p>
+<p><strong>安全集合</strong>：$\mathcal{B} \triangleq\left\{s \mid c_{\pi}(s)&lt;\eta\right\}$</p>
+<p><strong>边缘集合</strong>：$\Delta \triangleq\left\{s \mid c_{\pi}(s) \geq \eta\right\}$</p>
+<p><strong>假设1</strong>：$c(s, a)$非负且存在一个可积函数$g(s, a)$使得对于任意在状态空间和动作空间内的（s，a）而言，$c(s, a) &lt; g(s, a)$。</p>
+<p><strong>理论1</strong>：如果存在一个李氏方程L(s)和正常数$\alpha_1,\alpha_2,\alpha_3,\eta$，使得：</p>
 <script type="math/tex; mode=display">
-\mathbf{x}_{t+1}=f\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)=h\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)+g\left(\mathbf{x}_{t}, \mathbf{u}_{t}\right)</script><p>x：状态 u：控制动作 h()已知的系统动态 g()未知的模型误差</p>
-<p>$\pi$：$X \rightarrow U$ 最终目标设定为x转为0</p>
-<p>$r(x, u)$：作者用该变量定义该状态下执行该动作的<strong>cost</strong>（正），故$r(0,0)=0$</p>
-<p>目标：从交互数据中安全地了解系统的状态方程（因为有unknown model），并调整策略使discounted costs变小。</p>
-<p><strong>假设1（连续性）：</strong>h() g() $\pi$满足李普希茨连续条件，其李普希茨常数依次为$L_h,L_g,L_\pi$</p>
-<p><em>李普希茨条件的通俗含义：存在一个实数L，使得对于函数 f（x）上的每对点，连接它们的线的斜率的绝对值不大于这个实数L。最小的L称为该函数的Lipschitz常数。（满足李普希茨条件的函数是一个比满足一致连续更光滑的连续函数）</em></p>
-<p><strong>假设2（校准良好的模型）：</strong>假设对n个噪声数据的测量的均值和方差为$\mu_{n}$和$\sigma_{n}$，存在一个常数$\beta_{n}&gt;0$，使得对于所有的n&gt;0,x,u，以$1-\delta$的置信度满足：$\left|f(\mathbf{x}, \mathbf{u})-\mu_{n}(\mathbf{x}, \mathbf{u})\right|_{1} \leq \beta_{n} \sigma_{n}(\mathbf{x}, \mathbf{u})$</p>
-<p>Lyapunov函数：$v(0)=0,v(x)&gt;0$</p>
-<p><strong>理论1：</strong>$L,f$分别表示李雅普诺夫方差和满足李普希茨连续条件的系统状态方程，如果对于所有在吸引域$V(c)$中的状态x，均有$v(f(\mathbf{x}, \pi(\mathbf{x})))<v(\mathbf{x})$。其中，$\mathcal{V}(c)=\{\mathbf{x} \in \mathcal{x} \backslash\{\mathbf{0}\} \mid v(\mathbf{x}) \leq c\}, c>0$，则系统是稳定的。</v(\mathbf{x})$。其中，$\mathcal{V}(c)=\{\mathbf{x}></p>
-<p><em>相当于利用李雅普诺夫的递减条件取代了复杂的稳定检验（状态收敛到 0的检验）</em></p>
-<p>对于DRL，由于价值函数满足：$v(\mathbf{x})=r(\mathbf{x}, \pi(\mathbf{x}))+v(f(\mathbf{x}, \pi(\mathbf{x})) \leq v(f(\mathbf{x}, \pi(\mathbf{x})))$，本身就是一个很好的候选李雅普诺夫函数。</p>
-<p><em>Q1：所以说 作者前面定义cost用错符号了？</em></p>
-<p>初始安全策略：假设有个初始策略，可以使得原点在某个很小的状态集$S_0^x$内渐近稳定</p>
-<p>定义$v(f(\cdot))$的上界和下界分别是$u_n(x)$和$l_n(x)$。则稳定性保证可以变为$v(f(\mathbf{x}, \mathbf{u})) \leq u_{n}(\mathbf{x})&lt;v(\mathbf{x}) \text { for all } \mathbf{x} \in \mathcal{V}(c)$</p>
-<p>作者认为理论1是针对连续x而言的，实际验证起来很困难，所以扩展到了离散域。</p>
-<p><strong>理论2：</strong>将状态空间$X$扩展到离散域$X_{\tau}$，离散域里的点和连续域的点之间的L1范数很小 $\left|\mathbf{x}-[\mathbf{x}]_{\tau}\right|_{1} \leq \tau$，对于所有既属于该离散域又属于吸引域的状态x而言，若满足$u_{n}(\mathbf{x}, \mathbf{u})&lt;v(\mathbf{x})-L_{\Delta v} \tau$，则该域内以$1-\delta$的置信度满足$v(f(\mathbf{x}, \pi(\mathbf{x})))&lt;v(\mathbf{x})$，其中，$L_{\Delta v}:=L_{v} L_{f}\left(L_{\pi}+1\right)+L_{v}$。</p>
-<p>定义满足递减条件的所有状态-动作集合：</p>
-<p>$\mathcal{D}_{n}=\left\{(\mathbf{x}, \mathbf{u}) \in \mathcal{X}_{\tau} \times \mathcal{U} \mid u_{n}(\mathbf{x}, \mathbf{u})-v(\mathbf{x})&lt;-L_{\Delta v} \tau\right\}$</p>
-<p>RL策略目标是找到一个<strong>尽可能大的吸引域</strong>，使得其中所有的$(x, \pi_x)$均在$D$内：</p>
+\alpha_1 c_\pi(s) \leq L(s) \leq \alpha_2 c_\pi(s), \forall s \in S</script><p>且：（能量递减UUB条件）</p>
 <script type="math/tex; mode=display">
-\pi_{n}, c_{n}=\underset{\pi \in \Pi_{L}, c \in \mathbb{R}_{>0}}{\operatorname{argmax}} c, \quad \text { such that for all } \mathbf{x} \in \mathcal{V}(c) \cap \mathcal{X}_{\tau}:(\mathbf{x}, \pi(\mathbf{x})) \in \mathcal{D}_{n}</script><p><strong>理论3：</strong>假设实际的吸引域为$R_{\pi_n}$，则在策略$\pi_n$下，对于$\delta \in (0,1)$，至少有$（1-\delta）$的置信度认为$\mathcal{V}\left(c_{n}\right) \subseteq \mathcal{R}_{\pi_{n}}$ ($n&gt;0$)。 </p>
-<p>除此之外，作者提出不仅需要将当前状态限制在$V(C)$中，对于该状态下采取控制动作后转移的次态也要在$V(C)$中：</p>
+\mathbb{E}_{s \sim \mu_{N}}\left(\mathbb{E}_{s^{\prime} \sim P_{\pi}} L\left(s^{\prime}\right) \mathbb{1}_{\Delta}\left(s^{\prime}\right)-L(s) \mathbb{1}_{\Delta}(s)\right) <-\alpha_{3} \mathbb{E}_{s \sim \mu_{N}} c_{\pi}(s) \mathbb{1}_{\Delta}(s)</script><p>其中$\mu_{N}(s)$代表了状态s在有限N个时间步长上的分布：$\mu_{N}(s) \doteq \frac{1}{N} \sum_{t=1}^{N} p(s \mid \rho, \pi, t)$</p>
+<p>N是处于边缘集合的概率&gt;0的最后一个时刻</p>
+<p>$\mathbb{1}_{\Delta}(s)$表示该状态是否在边缘集合内：$\mathbb{1}_{\Delta}(s)= \begin{cases}1 &amp; s \in \Delta \\ 0 &amp; s \notin \Delta\end{cases}$</p>
+<p><em>作者的这种方法需要采用历史数据（$\mu_{N}(s)$），但并不需要了解模型信息</em></p>
+<p><strong>注意1</strong>：如果系统满足UUB且以$\frac{\alpha_{2} b}{\alpha_{3}}+\eta&lt;d$为界限，则可以保证系统满足安全性约束。</p>
+<hr>
+<p><strong>Lyapunov-based Soft Actor–Critic(LSAC)——off-policy</strong></p>
+<p>critic函数包括两部分，其一是标准SAC的目标（评估该（s,a）的价值），用$Q(s,a)$来评判；其二是评估UUB条件，用李雅普诺夫critic函数$L_c(s,a)$来评判。</p>
+<p><em>为什么用$L_c(s,a)$而不是$L(s)$？</em></p>
+<p><em>因为$L(s)$不能直接用于critic函数，critic更新的时候是对$\pi$而言的，而$L(s)$与$\pi$无关。</em></p>
+<p>二者之间的关系为：$L(s)=\mathbb{E}_{a \sim \pi}L_c(s,a)$</p>
+<p>$L_c(s,a)$使用一个参数化的全连接层DNN来描述。该网络的目的是让$L_c(s,a)$靠近$L_{target}(s,a)$，$L_{target}(s,a)$指的就是真实的满足李雅普诺夫条件的函数（作者选择了价值函数和约束函数来做候选，因为这俩都是非负的且一阶导是半负定的）：</p>
 <script type="math/tex; mode=display">
-\mathcal{S}_{n}=\bigcup_{\mathbf{z} \subset \mathcal{S_{n-1}}}\left\{\mathbf{z}^{\prime} \in \mathcal{V}\left(c_{n}\right) \cap \mathcal{X}_{\tau} \times \mathcal{U}_{\tau} \mid u_{n}(\mathbf{z})+L_{v} L_{f}\left\|\mathbf{z}-\mathbf{z}^{\prime}\right\|_{1} \leq c_{n}\right\}</script><p>其算法伪代码为：</p>
-<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226150644884.png" alt="伪代码"></p>
-<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151031162.png" alt="image-20220226151031162"></p>
-<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151118226.png" alt="image-20220226151118226"></p>
-<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151236997.png" alt="image-20220226151236997"></p>
-<p><em>吸引域本身在变大 同时更多状态落在吸引域中</em></p>
-<p><img src="/2022/02/27/Robust%20DRL-2/image-20220226151322970.png" alt="image-20220226151322970"></p>
+J(\phi)=\mathbb{E}_{\mathcal{D}}\left[\frac{1}{2}\left(L_{c}(s, a)-L_{\text {target }}(s, a)\right)^{2}\right]</script><p>D是$\pi$下的transition：$\mathcal{D}=\{(s,a,s^{\prime},r,c)\}$，$J(\phi)$即后文伪代码中的$J(L_c)$。</p>
+<p>同critic函数里$Q_{target}$的思路，$L_{target}$定义为：</p>
+<script type="math/tex; mode=display">
+L_{target}(s,a) = c(s,a) + \text{max}_{a^{\prime}} \gamma L_c^{\prime}(s^{\prime}, a^{\prime})</script><p>对于LSAC而言，一方面SAC在最大化Q（s,a）的同时希望策略熵尽可能大，另一方面安全约束希望能量递减尽可能大（后-前越小越好），故利用拉格朗日法，该多约束最优化问题可以转变为下式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+J(\pi)=& \mathbb{E}_{\mathcal{D}}\left[-Q\left(s, f_{\theta}(s, \epsilon)\right)+\beta \log \pi_{\theta}\left(f_{\theta}(s, \epsilon) \mid s\right)\right] \\
++& \lambda \mathbb{E}_{\mathcal{D}_{\Delta}}\left[L_{c}\left(s^{\prime}, f_{\theta}\left(s^{\prime}, \epsilon\right)\right) \mathbb{1}_{\Delta}\left(s^{\prime}\right)\right.\\
+-&\left.\left(L_{c}(s, a)-\alpha_{3} c\right) \mathbb{1}_{\Delta}(s)\right]
+\end{aligned}</script><p>$\beta$和$\lambda$是正的拉格朗日乘数。$D_{\Delta}$指的是在$\mu_{N}$中的transition（edge buffer）$D$即常规的replay buffer。</p>
+<p>对于$Q$、$\beta$和$\lambda$，其对应的损失函数依次为：</p>
+<p>$J\left(Q_{i}\right)=\mathbb{E}_{\mathcal{D}} \frac{1}{2}\left[r+\gamma Q_{i}^{\prime}\left(s^{\prime}, f_{\theta}\left(s^{\prime}, \epsilon\right)\right)-Q_{i}(s, a)\right]^{2}, i \in\{1,2\}$</p>
+<p>$J(\beta)=\beta \mathbb{E}_{\mathcal{D}}\left[\log \pi_{\theta}(a \mid s)+\mathcal{H}_{t}\right]$</p>
+<p>$J(\lambda)=\lambda \mathbb{E}_{\mathcal{D}_{\Delta}}\left[L_{c}\left(s^{\prime}, f_{\theta}\left(s^{\prime}, \epsilon\right)\right) \mathbb{1}_{\Delta}\left(s^{\prime}\right)-\left(L_{c}(s, a)-\alpha_{3} c\right) \mathbb{1}_{\Delta}(s)\right]$</p>
+<p>最终LSAC的伪代码如下：</p>
+<p><img src="/2022/03/05/Robust%20DRL-3/image-20220227171257691.png" alt="image-20220227171257691" style="zoom: 67%;"></p>
+<hr>
+<p><strong>Lyapunov-based Constrained Policy Optimization (LCPO)——off-policy</strong></p>
+<p>CPO+安全约束的原问题如下：</p>
+<script type="math/tex; mode=display">
+\theta_{k+1}=\underset{\theta}{\arg \max } \underset{\theta \sim_{\Delta \sim}}{\mathbb{E}} Q_{\pi_{k}}(s, a)</script><script type="math/tex; mode=display">
+\begin{aligned}\text { s.t. } &\mathbb{E}_{s \sim \mathcal{D}_{\Delta} \atop a \sim \pi}\left[L\left(s^{\prime}\right) \mathbb{1}_{\Delta}\left(s^{\prime}\right)-\left(L(s)-\alpha_{3} c\right) \mathbb{1}_{\Delta}(s)\right] \leq 0 \\ &\mathbb{E}_{\mathcal{D}} D_{\mathrm{KL}}\left(\pi_{\theta} \mid \pi_{k}\right) \leq \delta \end{aligned}</script><p>作者使用泰勒二阶展开将其近似为如下优化问题：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \theta_{k+1}=& \arg \max _{\theta} g_{Q}^{\top}\left(\theta-\theta_{k}\right) \\ \text { s.t. } & g_{L}^{\top}\left(\theta-\theta_{k}\right)+h \leq 0 \\ & \frac{1}{2}\left(\theta-\theta_{k}\right)^{\top} H\left(\theta-\theta_{k}\right) \leq \delta \end{aligned}</script><p>$g_Q$、$g_L$分别是目标函数和安全约束函数相对于网络参数$\theta$的梯度。$h$是安全约束函数值，$H$是Fisher信息矩阵。</p>
+<p>则针对上述凸优化问题，其对偶问题为：</p>
+<script type="math/tex; mode=display">
+\max _{\lambda, \beta \geq 0} \frac{1}{2 \beta}\left(\mathrm{g}_{Q}^{T} H^{-1} g_{Q}-2 \lambda \mathcal{Z}+\lambda^{2} \mathcal{N}\right)+\lambda h-\frac{\beta \delta}{2}</script><p>其中$\mathcal{Z}=g^T_QH^{-1}g_L$，$\mathcal{N}=g^{T}_LH^{-1}g_L$。</p>
+<p>假设原问题有解且$\lambda$和$\beta$是对偶问题的解，则原问题的最优解为：</p>
+<script type="math/tex; mode=display">
+\theta_{k+1}=\theta_{k}+\frac{1}{\beta^{*}} H^{-1}\left(g_{Q}-\lambda^{*} g_{L}\right)</script><p>若原问题无解，则需要尽快恢复到安全策略：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \theta_{k+1} &=\arg \min _{\theta} g_{L}^{\top}\left(\theta-\theta_{k}\right)+h \\ \text { s.t. } & \frac{1}{2}\left(\theta-\theta_{k}\right)^{\top} H\left(\theta-\theta_{k}\right) \leq \delta \end{aligned}</script><p><em>相当于在小范围策略更新的情况下找到离约束最近的策略</em></p>
+<p>该解为：</p>
+<script type="math/tex; mode=display">
+\theta^{*}=\theta_{k}-\sqrt{\frac{2 \delta}{g_{L}^{\top} H^{-1 g_{L}}}} H^{-} 1 g_{L}</script><p>​    LCPO的伪代码如下：</p>
+<p><img src="/2022/03/05/Robust%20DRL-3/image-20220227193544818.png" alt="image-20220227193544818"></p>
+<p>作者认为<strong>可以先用LSAC在仿真环境中学习初始策略，再将其应用到LCPO接受进一步的在线训练</strong>。</p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2022/03/05/Robust%20DRL-3/image-20220227200041471.png" alt="image-20220227200041471"></p>
+<p><img src="/2022/03/05/Robust%20DRL-3/image-20220227200051457.png" alt="image-20220227200051457"></p>
+<p><em>第一行是return 第二行是cost函数的值 第三行是超越安全界限的数量</em></p>
 
     </div>
 
@@ -315,7 +354,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://waunx.github.io/2022/02/27/Robust%20DRL-2/" title="Robust DRL学习笔记（2）">https://waunx.github.io/2022/02/27/Robust DRL-2/</a>
+    <a href="https://waunx.github.io/2022/03/05/Robust%20DRL-3/" title="Robust DRL学习笔记（3）">https://waunx.github.io/2022/03/05/Robust DRL-3/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -335,13 +374,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/02/23/Robust-DRL-1/" rel="prev" title="Robust DRL学习笔记（1）">
-      <i class="fa fa-chevron-left"></i> Robust DRL学习笔记（1）
+    <a href="/2022/02/27/Robust%20DRL-2/" rel="prev" title="Robust DRL学习笔记（2）">
+      <i class="fa fa-chevron-left"></i> Robust DRL学习笔记（2）
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/03/05/Robust%20DRL-3/" rel="next" title="Robust DRL学习笔记（3）">
-      Robust DRL学习笔记（3） <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     

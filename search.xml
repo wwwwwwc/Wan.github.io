@@ -54,6 +54,104 @@
       </tags>
   </entry>
   <entry>
+    <title>Robust DRL学习笔记（3）</title>
+    <url>/2022/03/05/Robust%20DRL-3/</url>
+    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Reinforcement learning control of constrained dynamic systems with uniformly ultimate boundedness stability guarantee</strong><br><span id="more"></span></p>
+<p>Minghao Han(HIT) Yuan Tian WeiPan(Delft University of Technology, Netherlands)</p>
+<p>Automatica</p>
+<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>为了解决RL控制的安全问题，传统的方法大多需要了解系统状态方程的全部或部分信息，作者提出了一种方法，不需要了解模型，只从数据出发就能完成UUB稳定性保证。</p>
+<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p><strong>UUB</strong></p>
+<p>UUB保证：轨迹将在有限时间内进入稳定的邻域，并且此后不会从该集合中逃脱</p>
+<p>该稳定性保证以往用于解决自适应动态规划（Adaptive Dynamic Programming），但不可避免的会用到模型结构和模型参数。</p>
+<p><strong>RL with safety constraints</strong></p>
+<p>​    <strong>（1）Safety Constrained Policy Optimization(CPO)</strong></p>
+<p>该方法在一个初始安全的策略下使后续的安全约束得以满足，但受限于on-policy，采样效率低下。（无stability guarantees）</p>
+<p>​    <strong>（2） Lyapunov-based approach</strong></p>
+<p>通过构造李雅普诺夫函数求解带约束的控制问题。但仅保证设计的约束函数的累积保持在阈值以下。（无 stability guarantees）</p>
+<p>​    <strong>（3）model-based RL in Lipschitz continuous deterministic nonlinear systems</strong></p>
+<p>17年nips那篇，笔记2解读过。问题出在其安全性保证是针对状态空间子集中离散点而言的，故限制在低维、简单的系统中。</p>
+<p>​    <strong>（4）model-based CBF controller</strong></p>
+<p>19年aaai那篇，笔记1解读过。问题在于需要一个nominal model。</p>
+<p>​    <strong>（5）expert knowledge+RL</strong></p>
+<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><p><strong>UUB稳定性相关概念</strong></p>
+<p><strong>定义1：</strong>如果存在正的常数$b$和$\eta$，对于任意$\epsilon<b$，存在$T(\epsilon, \eta)$，使得：$\left\|s_{t_0}\right\| < \epsilon \rightarrow\left\|s_{t}\right\|<\eta, \forall t>t_{0}+T$，该系统被称为满足UUB，且以$\eta$为界限。若$\epsilon$可以任意大，则该系统满足全局UUB。</b$，存在$T(\epsilon,></p>
+<p><img src="/2022/03/05/Robust%20DRL-3/image-20220227112538366.png" alt="image-20220227112538366" style="zoom: 50%;"></p>
+<p>上述定义的安全约束仅仅限制在状态的l1范数上，但实际系统的约束函数不一定是采用该约束方法，故作者将定义1更新为：</p>
+<p><strong>定义2：</strong>如果存在正的常数$b$和$\eta$，对于任意$\epsilon&lt;b$，存在$T(\epsilon, \eta)$，使得：$c_{\pi}(s_1) \leq \epsilon \Rightarrow c_{\pi}(s_t)\leq \eta, \forall t \geq T$，该系统被称为满足UUB，且以$c_\pi(\cdot)$为界限。若$\epsilon$可以任意大，则该系统满足全局UUB。</p>
+<p>其中$c_{\pi}(s) \triangleq \mathbb{E}_{a \sim \pi} c(s, a)$。</p>
+<p><strong>Constrained Markov Decision Process(CMDP)：</strong></p>
+<p>$\max _{\pi} J(\pi)$ s.t. $\mathbb{E}_{s_{t}} c_{\pi}\left(s_{t}\right) \leq d, \forall t \in[1, \infty)$</p>
+<p>$J(\pi)$是MDP的目标，加上了安全约束就变成了CMDP。</p>
+<p>假设初始状态$S_1$（其概率密度函数定义为$\rho\left(S_{1}\right)$）是在安全域内，即：初始状态从$\Gamma$域内进行选择：$\Gamma \triangleq\left\{s \mid c_{\pi}(s) \leq b\right\}$</p>
+<p><strong>安全集合</strong>：$\mathcal{B} \triangleq\left\{s \mid c_{\pi}(s)&lt;\eta\right\}$</p>
+<p><strong>边缘集合</strong>：$\Delta \triangleq\left\{s \mid c_{\pi}(s) \geq \eta\right\}$</p>
+<p><strong>假设1</strong>：$c(s, a)$非负且存在一个可积函数$g(s, a)$使得对于任意在状态空间和动作空间内的（s，a）而言，$c(s, a) &lt; g(s, a)$。</p>
+<p><strong>理论1</strong>：如果存在一个李氏方程L(s)和正常数$\alpha_1,\alpha_2,\alpha_3,\eta$，使得：</p>
+<script type="math/tex; mode=display">
+\alpha_1 c_\pi(s) \leq L(s) \leq \alpha_2 c_\pi(s), \forall s \in S</script><p>且：（能量递减UUB条件）</p>
+<script type="math/tex; mode=display">
+\mathbb{E}_{s \sim \mu_{N}}\left(\mathbb{E}_{s^{\prime} \sim P_{\pi}} L\left(s^{\prime}\right) \mathbb{1}_{\Delta}\left(s^{\prime}\right)-L(s) \mathbb{1}_{\Delta}(s)\right) <-\alpha_{3} \mathbb{E}_{s \sim \mu_{N}} c_{\pi}(s) \mathbb{1}_{\Delta}(s)</script><p>其中$\mu_{N}(s)$代表了状态s在有限N个时间步长上的分布：$\mu_{N}(s) \doteq \frac{1}{N} \sum_{t=1}^{N} p(s \mid \rho, \pi, t)$</p>
+<p>N是处于边缘集合的概率&gt;0的最后一个时刻</p>
+<p>$\mathbb{1}_{\Delta}(s)$表示该状态是否在边缘集合内：$\mathbb{1}_{\Delta}(s)= \begin{cases}1 &amp; s \in \Delta \\ 0 &amp; s \notin \Delta\end{cases}$</p>
+<p><em>作者的这种方法需要采用历史数据（$\mu_{N}(s)$），但并不需要了解模型信息</em></p>
+<p><strong>注意1</strong>：如果系统满足UUB且以$\frac{\alpha_{2} b}{\alpha_{3}}+\eta&lt;d$为界限，则可以保证系统满足安全性约束。</p>
+<hr>
+<p><strong>Lyapunov-based Soft Actor–Critic(LSAC)——off-policy</strong></p>
+<p>critic函数包括两部分，其一是标准SAC的目标（评估该（s,a）的价值），用$Q(s,a)$来评判；其二是评估UUB条件，用李雅普诺夫critic函数$L_c(s,a)$来评判。</p>
+<p><em>为什么用$L_c(s,a)$而不是$L(s)$？</em></p>
+<p><em>因为$L(s)$不能直接用于critic函数，critic更新的时候是对$\pi$而言的，而$L(s)$与$\pi$无关。</em></p>
+<p>二者之间的关系为：$L(s)=\mathbb{E}_{a \sim \pi}L_c(s,a)$</p>
+<p>$L_c(s,a)$使用一个参数化的全连接层DNN来描述。该网络的目的是让$L_c(s,a)$靠近$L_{target}(s,a)$，$L_{target}(s,a)$指的就是真实的满足李雅普诺夫条件的函数（作者选择了价值函数和约束函数来做候选，因为这俩都是非负的且一阶导是半负定的）：</p>
+<script type="math/tex; mode=display">
+J(\phi)=\mathbb{E}_{\mathcal{D}}\left[\frac{1}{2}\left(L_{c}(s, a)-L_{\text {target }}(s, a)\right)^{2}\right]</script><p>D是$\pi$下的transition：$\mathcal{D}=\{(s,a,s^{\prime},r,c)\}$，$J(\phi)$即后文伪代码中的$J(L_c)$。</p>
+<p>同critic函数里$Q_{target}$的思路，$L_{target}$定义为：</p>
+<script type="math/tex; mode=display">
+L_{target}(s,a) = c(s,a) + \text{max}_{a^{\prime}} \gamma L_c^{\prime}(s^{\prime}, a^{\prime})</script><p>对于LSAC而言，一方面SAC在最大化Q（s,a）的同时希望策略熵尽可能大，另一方面安全约束希望能量递减尽可能大（后-前越小越好），故利用拉格朗日法，该多约束最优化问题可以转变为下式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+J(\pi)=& \mathbb{E}_{\mathcal{D}}\left[-Q\left(s, f_{\theta}(s, \epsilon)\right)+\beta \log \pi_{\theta}\left(f_{\theta}(s, \epsilon) \mid s\right)\right] \\
++& \lambda \mathbb{E}_{\mathcal{D}_{\Delta}}\left[L_{c}\left(s^{\prime}, f_{\theta}\left(s^{\prime}, \epsilon\right)\right) \mathbb{1}_{\Delta}\left(s^{\prime}\right)\right.\\
+-&\left.\left(L_{c}(s, a)-\alpha_{3} c\right) \mathbb{1}_{\Delta}(s)\right]
+\end{aligned}</script><p>$\beta$和$\lambda$是正的拉格朗日乘数。$D_{\Delta}$指的是在$\mu_{N}$中的transition（edge buffer）$D$即常规的replay buffer。</p>
+<p>对于$Q$、$\beta$和$\lambda$，其对应的损失函数依次为：</p>
+<p>$J\left(Q_{i}\right)=\mathbb{E}_{\mathcal{D}} \frac{1}{2}\left[r+\gamma Q_{i}^{\prime}\left(s^{\prime}, f_{\theta}\left(s^{\prime}, \epsilon\right)\right)-Q_{i}(s, a)\right]^{2}, i \in\{1,2\}$</p>
+<p>$J(\beta)=\beta \mathbb{E}_{\mathcal{D}}\left[\log \pi_{\theta}(a \mid s)+\mathcal{H}_{t}\right]$</p>
+<p>$J(\lambda)=\lambda \mathbb{E}_{\mathcal{D}_{\Delta}}\left[L_{c}\left(s^{\prime}, f_{\theta}\left(s^{\prime}, \epsilon\right)\right) \mathbb{1}_{\Delta}\left(s^{\prime}\right)-\left(L_{c}(s, a)-\alpha_{3} c\right) \mathbb{1}_{\Delta}(s)\right]$</p>
+<p>最终LSAC的伪代码如下：</p>
+<p><img src="/2022/03/05/Robust%20DRL-3/image-20220227171257691.png" alt="image-20220227171257691" style="zoom: 67%;"></p>
+<hr>
+<p><strong>Lyapunov-based Constrained Policy Optimization (LCPO)——off-policy</strong></p>
+<p>CPO+安全约束的原问题如下：</p>
+<script type="math/tex; mode=display">
+\theta_{k+1}=\underset{\theta}{\arg \max } \underset{\theta \sim_{\Delta \sim}}{\mathbb{E}} Q_{\pi_{k}}(s, a)</script><script type="math/tex; mode=display">
+\begin{aligned}\text { s.t. } &\mathbb{E}_{s \sim \mathcal{D}_{\Delta} \atop a \sim \pi}\left[L\left(s^{\prime}\right) \mathbb{1}_{\Delta}\left(s^{\prime}\right)-\left(L(s)-\alpha_{3} c\right) \mathbb{1}_{\Delta}(s)\right] \leq 0 \\ &\mathbb{E}_{\mathcal{D}} D_{\mathrm{KL}}\left(\pi_{\theta} \mid \pi_{k}\right) \leq \delta \end{aligned}</script><p>作者使用泰勒二阶展开将其近似为如下优化问题：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \theta_{k+1}=& \arg \max _{\theta} g_{Q}^{\top}\left(\theta-\theta_{k}\right) \\ \text { s.t. } & g_{L}^{\top}\left(\theta-\theta_{k}\right)+h \leq 0 \\ & \frac{1}{2}\left(\theta-\theta_{k}\right)^{\top} H\left(\theta-\theta_{k}\right) \leq \delta \end{aligned}</script><p>$g_Q$、$g_L$分别是目标函数和安全约束函数相对于网络参数$\theta$的梯度。$h$是安全约束函数值，$H$是Fisher信息矩阵。</p>
+<p>则针对上述凸优化问题，其对偶问题为：</p>
+<script type="math/tex; mode=display">
+\max _{\lambda, \beta \geq 0} \frac{1}{2 \beta}\left(\mathrm{g}_{Q}^{T} H^{-1} g_{Q}-2 \lambda \mathcal{Z}+\lambda^{2} \mathcal{N}\right)+\lambda h-\frac{\beta \delta}{2}</script><p>其中$\mathcal{Z}=g^T_QH^{-1}g_L$，$\mathcal{N}=g^{T}_LH^{-1}g_L$。</p>
+<p>假设原问题有解且$\lambda$和$\beta$是对偶问题的解，则原问题的最优解为：</p>
+<script type="math/tex; mode=display">
+\theta_{k+1}=\theta_{k}+\frac{1}{\beta^{*}} H^{-1}\left(g_{Q}-\lambda^{*} g_{L}\right)</script><p>若原问题无解，则需要尽快恢复到安全策略：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \theta_{k+1} &=\arg \min _{\theta} g_{L}^{\top}\left(\theta-\theta_{k}\right)+h \\ \text { s.t. } & \frac{1}{2}\left(\theta-\theta_{k}\right)^{\top} H\left(\theta-\theta_{k}\right) \leq \delta \end{aligned}</script><p><em>相当于在小范围策略更新的情况下找到离约束最近的策略</em></p>
+<p>该解为：</p>
+<script type="math/tex; mode=display">
+\theta^{*}=\theta_{k}-\sqrt{\frac{2 \delta}{g_{L}^{\top} H^{-1 g_{L}}}} H^{-} 1 g_{L}</script><p>​    LCPO的伪代码如下：</p>
+<p><img src="/2022/03/05/Robust%20DRL-3/image-20220227193544818.png" alt="image-20220227193544818"></p>
+<p>作者认为<strong>可以先用LSAC在仿真环境中学习初始策略，再将其应用到LCPO接受进一步的在线训练</strong>。</p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2022/03/05/Robust%20DRL-3/image-20220227200041471.png" alt="image-20220227200041471"></p>
+<p><img src="/2022/03/05/Robust%20DRL-3/image-20220227200051457.png" alt="image-20220227200051457"></p>
+<p><em>第一行是return 第二行是cost函数的值 第三行是超越安全界限的数量</em></p>
+]]></content>
+      <categories>
+        <category>论文解读</category>
+      </categories>
+      <tags>
+        <tag>Robust DRL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Robust DRL学习笔记（1）</title>
     <url>/2022/02/23/Robust-DRL-1/</url>
     <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>End-to-End Safe Reinforcement Learning through Barrier Functions for Safety-Critical Continuous Control Tasks</strong></p>
