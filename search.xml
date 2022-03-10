@@ -212,4 +212,117 @@ u_{k}(s)=& u_{\theta_{k}}^{R L}(s)+\sum_{j=0}^{k-1} u_{j}^{C B F}\left(s, u_{\th
         <tag>Robust DRL</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Robust DRL学习笔记（4）</title>
+    <url>/2022/03/11/Robust%20DRL-4/</url>
+    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Constrained Policy Optimization</strong></p>
+<span id="more"></span>
+<p>Joshua Achiam David Held Aviv Tamar Pieter Abbeel (UC Berkeley)<br>       PMLR2017</p>
+<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>第一个用于约束强化学习的<strong>通用（可以用于DRL）</strong>策略搜索算法，在每次迭代中<strong>保证</strong>近似约束满足。</p>
+<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p>CMDP：增加了约束条件，限制了该MDP允许的策略集。</p>
+<p><em>“A constrained Markov decision process (CMDP) is an MDP augmented with  constraints that restrict the set of allowable policies for that MDP”</em></p>
+<p>已有利用启发式算法或是基于原始对偶方法的方法进行CMDP的研究，但无法保证每个学习过程中都能满足约束，存在保证了约束的工作，但假设条件太多，不通用。</p>
+<p>其他与之前笔记重复内容不再赘述。</p>
+<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><p><strong>CMDP：</strong></p>
+<script type="math/tex; mode=display">
+C_{i}: J_{C_{i}}(\pi)=\mathrm{E}\left[\sum_{t=0}^{\infty} \gamma^{t} C_{i}\left(s_{t}, a_{t}, s_{t+1}\right)\right]\\
+\Pi_{C} \doteq\left\{\pi \in \Pi: \forall i, J_{C_{i}}(\pi) \leq d_{i}\right\}\\
+\pi^{*}=\arg \max _{\pi \in \Pi_{C}} J(\pi)</script><p>$J(\pi)$就是折扣return的期望，$J_{C_i}(\pi)$是折扣约束的期望，目标是在满足$J_{C_i}(\pi)&lt;d_i$的情况下最大化$J(\pi)$。</p>
+<p><strong>Constrained Policy Optimization(CPO):</strong></p>
+<p>对于大型的MDP而言，若想得出最优策略是十分复杂的，因此利用神经网络等策略搜索算法逐步解决该问题：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\pi_{k+1}=\arg \max _{\pi \in \Pi_{\theta}}  J(\pi) \\
+& \text { s.t. } D\left(\pi, \pi_{k}\right) \leq \delta
+\end{aligned}</script><p>$D$是度量新旧策略差异的度量函数，每次策略更新是在很小的邻域内。</p>
+<p>所以，对于CMDP而言，其更新可以看作：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\pi_{k+1}=&\arg \max _{\pi \in \Pi_{\theta}}  J(\pi) \\
+\text { s.t. } & J_{C_{i}}(\pi) \leq d_{i} \quad i=1, \ldots, m \\
+& D\left(\pi, \pi_{k}\right) \leq \delta .
+\end{aligned}</script><p>如果完全按照上式进行更新，则也是计算复杂的，所以作者使用了 Trust Region Optimization(TRO)近似计算上式。</p>
+<hr>
+<p>作者首先证明了两个随机策略的returns的差的界限；之后证明了在每次更新时最坏情况下的性能下降保证。</p>
+<p><strong>Policy Performance Bounds</strong></p>
+<p>已有证明表示：</p>
+<script type="math/tex; mode=display">
+J\left(\pi^{\prime}\right)-J(\pi)=\frac{1}{1-\gamma} \underset{s \sim d^{\pi^{\prime} \atop} \atop a \sim \pi^{\prime}}{\mathrm{E}}\left[A^{\pi}(s, a)\right]</script><p>其中$d^{\pi}(s)=(1-\gamma) \sum_{t=0}^{\infty} \gamma^{t} P\left(s_{t}=s \mid \pi\right)$表示discounted 未来状态的分布。（该证明没懂）</p>
+<p><strong>理论1：</strong>对于任意一个关于S的函数f，任意的策略$\pi$和$\pi^{\prime}$，定义估计与真实值的误差为$\delta_{f}\left(s, a, s^{\prime}\right) \doteq R\left(s, a, s^{\prime}\right)+\gamma f\left(s^{\prime}\right)-f(s)$，</p>
+<p>同时定义：</p>
+<script type="math/tex; mode=display">
+\epsilon_{f}^{\pi^{\prime}} \doteq \max _{s}\left|\mathrm{E}_{a \sim \pi^{\prime}, s^{\prime} \sim P}\left[\delta_{f}\left(s, a, s^{\prime}\right)\right]\right|</script><script type="math/tex; mode=display">
+L_{\pi, f}\left(\pi^{\prime}\right) \doteq \underset{s \sim d^{\pi} ,a \sim \pi  \atop s^{\prime} \sim P}{\mathrm{E}}\left[\left(\frac{\pi^{\prime}(a \mid s)}{\pi(a \mid s)}-1\right) \delta_{f}\left(s, a, s^{\prime}\right)\right]</script><script type="math/tex; mode=display">
+D_{\pi, f}^{\pm}\left(\pi^{\prime}\right) \doteq \frac{L_{\pi, f}\left(\pi^{\prime}\right)}{1-\gamma} \pm \frac{2 \gamma \epsilon_{f}^{\pi^{\prime}}}{(1-\gamma)^{2}} \underset{s \sim d^{\pi}}{\mathrm{E}}\left[D_{T V}\left(\pi^{\prime} \| \pi\right)[s]\right]</script><p>其中$D_{TV}\left(\pi^{\prime} | \pi\right)[s]=(1 / 2) \sum_{a}\left|\pi^{\prime}(a \mid s)-\pi(a \mid s)\right|$。则以下界限存在：</p>
+<script type="math/tex; mode=display">
+D_{\pi, f}^{+}\left(\pi^{\prime}\right) \geq J\left(\pi^{\prime}\right)-J(\pi) \geq D_{\pi, f}^{-}\left(\pi^{\prime}\right)</script><p><strong>推论1：</strong>对任意策略$\pi^{\prime}$,$\pi$，有$\epsilon^{\pi^{\prime}} \doteq \max _{s}\left|\mathrm{E}_{a \sim \pi^{\prime}}\left[A^{\pi}(s, a)\right]\right|$ ，则以下界限存在：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&J\left(\pi^{\prime}\right)-J(\pi) \\
+&\geq \frac{1}{1-\gamma} \underset{s \sim d^{\pi} \atop a \sim \pi^{\prime}}{\mathrm{E}}\left[A^{\pi}(s, a)-\frac{2 \gamma \epsilon^{\pi^{\prime}}}{1-\gamma} D_{T V}\left(\pi^{\prime} \| \pi\right)[s]\right]
+\end{aligned}</script><p><strong>推论2：</strong>对任意策略$\pi^{\prime}$,$\pi$，任意代价函数$C_i$，且$\epsilon_{C_{i}}^{\pi^{\prime}} \doteq \max _{s}\left|\mathrm{E}_{a \sim \pi^{\prime}}\left[A_{C_{i}}^{\pi}(s, a)\right]\right|$，则以下界限成立：</p>
+<script type="math/tex; mode=display">
+J_{C_{i}}\left(\pi^{\prime}\right)-J_{C_{i}}(\pi)
+\leq \frac{1}{1-\gamma} \underset{s \sim d^{\pi} \atop a \sim \pi^{\prime}}{\mathrm{E}}\left[A_{C_{i}}^{\pi}(s, a)+\frac{2 \gamma \epsilon_{C_{i}}^{\prime}}{1-\gamma} D_{T V}\left(\pi^{\prime} \| \pi\right)[s]\right]</script><p>上述理论和证明定义的界限都是针对<strong>TV散度</strong>而言的，而信域方法是利用<strong>KL散度</strong>，故通过Pinsker不等式将二者建立联系如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\underset{s \sim d^{\pi}}{\mathrm{E}}\left[D_{T V}\left(\pi^{\prime} \| \pi\right)[s]\right] & \leq \underset{s \sim d^{\pi}}{\mathrm{E}}\left[\sqrt{\frac{1}{2} D_{K L}\left(\pi^{\prime} \| \pi\right)[s]}\right] \\
+& \leq \sqrt{\frac{1}{2} \underset{s \sim d^{\pi}}{\mathrm{E}}\left[D_{K L}\left(\pi^{\prime} \| \pi\right)[s]\right]}
+\end{aligned}</script><p>KL散度计算公式为：$K L(p | q)=\sum p(x) \log \frac{p(x)}{q(x)}$。</p>
+<p><strong>推论3：</strong>将理论1和推论1、2中的TV散度换为KL散度即可得到一组和KL散度相关的边界条件。</p>
+<p><strong>Trust Region Methods</strong></p>
+<p>信赖域算法的策略更新采取以下形式：</p>
+<script type="math/tex; mode=display">
+\begin{array}{r}
+\pi_{k+1}=\arg \max _{\pi \in \Pi_{\theta}} \underset{s \sim d^{\pi} k}{\mathrm{E}}\left[A^{\pi_{k}}(s, a)\right] \\
+\text { s.t. } \bar{D}_{K L}\left(\pi \| \pi_{k}\right) \leq \delta
+\end{array}</script><p>其中$D_{KL}$的约束被称为信赖域（策略更新前后的策略性能之差可用优势函数的折扣累加期望）。</p>
+<p><strong>命题1（性能保证）：</strong>假设$\pi_{k}$按照式（12）进行更新，则策略更新前后的性能差异有：</p>
+<script type="math/tex; mode=display">
+J\left(\pi_{k+1}\right)-J\left(\pi_{k}\right) \geq \frac{-\sqrt{2 \delta} \gamma \epsilon^{\pi_{k+1}}}{(1-\gamma)^{2}}
+\\
+where \quad\epsilon^{\pi_{k+1}}=\max _{s}\left|\mathrm{E}_{a \sim \pi_{k+1}}\left[A^{\pi_{k}}(s, a)\right]\right|.</script><p>考虑信赖域的约束条件和安全约束条件，结合推论1、2、3，有：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\pi_{k+1}=\arg \max _{\pi \in \Pi_{\theta}} \underset{s \sim d^{\pi_{k}} \atop a \sim \pi}{\mathrm{E}}\left[A^{\pi_{k}}(s, a)\right]-\alpha_{k} \sqrt{\bar{D}_{K L}\left(\pi \| \pi_{k}\right)} \\
+&\text { s.t. } J_{C_{i}}\left(\pi_{k}\right)+\underset{s \sim d^{\pi_{k}} \atop a \sim \pi}{\mathrm{E}}\left[\frac{A_{C_{i}}^{\pi_{k}}(s, a)}{1-\gamma}\right]+\beta_{k}^{i} \sqrt{\bar{D}_{K L}\left(\pi \| \pi_{k}\right)} \leq d_{i}
+\end{aligned}</script><p>基于此，作者提出<strong>CPO</strong>：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\pi_{k+1}=& \arg \max _{\pi \in \Pi_{\theta}} \underset{s \sim d^{\pi_{k}}}{\mathrm{E}}\left[A^{\pi_{k}}(s, a)\right] \\
+\text { s.t. } &J_{C_{i}}\left(\pi_{k}\right)+\frac{1}{1-\gamma} \underset{s \sim d^{\pi_{k}}}{\mathrm{E}}\left[A_{C_{i}}^{\pi_{k}}(s, a)\right] \leq d_{i} \quad \forall i \\
+& \bar{D}_{K L}\left(\pi \| \pi_{k}\right) \leq \delta .
+\end{aligned}</script><p>​    因为这是一个信赖域方法，所以继承了命题1的性能保证。此外，根据推论2和3，又<strong>近似满足</strong>安全约束。故最终达到了满足安全约束的性能保证。</p>
+<p><strong>命题2（CPO更新的最坏情况）：</strong>安全约束$C_i-return$的上界为：    </p>
+<script type="math/tex; mode=display">
+J_{C_{i}}\left(\pi_{k+1}\right) \leq d_{i}+\frac{\sqrt{2 \delta} \gamma \epsilon_{C_{i}}^{\pi_{k+1}}}{(1-\gamma)^{2}}
+\\
+where \quad\epsilon_{C_{i}}^{\pi_{k+1}}=\max _{s}\left|\mathrm{E}_{a \sim \pi_{k+1}}\left[A_{C_{i}}^{\pi_{k}}(s, a)\right]\right|.</script><p><strong>CPO如何求解？</strong></p>
+<p>定义$c_{i}=J_{C_i}(\pi_k)-d$，则公式（15）可以近似为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\theta_{k+1}=\arg \max _{\theta} & g^{T}\left(\theta-\theta_{k}\right) \\
+\text { s.t. } \quad & c_{i}+b_{i}^{T}\left(\theta-\theta_{k}\right) \leq 0 \quad i=1, \ldots, m \\
+& \frac{1}{2}\left(\theta-\theta_{k}\right)^{T} H\left(\theta-\theta_{k}\right) \leq \delta
+\end{aligned}</script><p>$H$是费希尔信息矩阵，总是半正定的且式（17）优化问题是<strong>凸的</strong>（上式是一个带线性和二次约束的线性目标函数凸优化问题(LQCLP)），故可以用拉格朗日对偶方法求解：</p>
+<script type="math/tex; mode=display">
+\max _{\lambda \geq 0 \atop \nu \succeq 0} \frac{-1}{2 \lambda}\left(g^{T} H^{-1} g-2 r^{T} \nu+\nu^{T} S \nu\right)+\nu^{T} c-\frac{\lambda \delta}{2}</script><p>其中$r \doteq g^{T} H^{-1} B, S \doteq B^{T} H^{-1} B$。若$\lambda^<em>，v^</em>$是式（18）的解，则原问题的解为：</p>
+<script type="math/tex; mode=display">
+\theta^{*}=\theta_{k}+\frac{1}{\lambda^{*}} H^{-1}\left(g-B \nu^{*}\right)</script><p>由于近似是存在误差的，有时利用式（17）是安全有效的，但对于不可行的情况，作者利用下式更新：</p>
+<script type="math/tex; mode=display">
+\theta^{*}=\theta_{k}-\sqrt{\frac{2 \delta}{b^{T} H^{-1} b}} H^{-1} b</script><p>该更新用于信赖域和约束域的交集为空集时采取的更新措施。</p>
+<p>伪代码：</p>
+<p><img src="/2022/03/11/Robust%20DRL-4/image-20220307152139547.png" alt="image-20220307152139547"></p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2022/03/11/Robust%20DRL-4/image-20220307152526198.png" alt="image-20220307152526198"></p>
+<p><em>CPO保持在限制内（感觉都在限制值那块聚集？）更多 TRPO无效</em></p>
+<p><img src="/2022/03/11/Robust%20DRL-4/image-20220307152950704.png" alt="image-20220307152950704"></p>
+<p><em>CPO+cost shaping 更有效</em></p>
+]]></content>
+      <categories>
+        <category>论文解读</category>
+      </categories>
+      <tags>
+        <tag>Robust DRL</tag>
+      </tags>
+  </entry>
 </search>

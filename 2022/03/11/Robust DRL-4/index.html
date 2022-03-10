@@ -20,28 +20,37 @@
     var CONFIG = {"hostname":"waunx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Wanxu&#39;s notes">
-<meta property="og:url" content="https://waunx.github.io/index.html">
+  <meta name="description" content="论文信息Constrained Policy Optimization">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Robust DRL学习笔记（4）">
+<meta property="og:url" content="https://waunx.github.io/2022/03/11/Robust%20DRL-4/index.html">
 <meta property="og:site_name" content="Wanxu&#39;s notes">
+<meta property="og:description" content="论文信息Constrained Policy Optimization">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://waunx.github.io/2022/03/11/Robust%20DRL-4/image-20220307152139547.png">
+<meta property="og:image" content="https://waunx.github.io/2022/03/11/Robust%20DRL-4/image-20220307152526198.png">
+<meta property="og:image" content="https://waunx.github.io/2022/03/11/Robust%20DRL-4/image-20220307152950704.png">
+<meta property="article:published_time" content="2022-03-10T16:00:30.000Z">
+<meta property="article:modified_time" content="2022-03-10T10:21:49.425Z">
 <meta property="article:author" content="Wan Xu">
+<meta property="article:tag" content="Robust DRL">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://waunx.github.io/2022/03/11/Robust%20DRL-4/image-20220307152139547.png">
 
-<link rel="canonical" href="https://waunx.github.io/">
+<link rel="canonical" href="https://waunx.github.io/2022/03/11/Robust%20DRL-4/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Wanxu's notes</title>
+  <title>Robust DRL学习笔记（4） | Wanxu's notes</title>
   
 
 
@@ -180,9 +189,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -198,10 +208,9 @@
       <meta itemprop="name" content="Wanxu's notes">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/11/Robust%20DRL-4/" class="post-title-link" itemprop="url">Robust DRL学习笔记（4）</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Robust DRL学习笔记（4）
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -241,288 +250,153 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Constrained Policy Optimization</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/11/Robust%20DRL-4/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+        <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Constrained Policy Optimization</strong></p>
+<span id="more"></span>
+<p>Joshua Achiam David Held Aviv Tamar Pieter Abbeel (UC Berkeley)<br>       PMLR2017</p>
+<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>第一个用于约束强化学习的<strong>通用（可以用于DRL）</strong>策略搜索算法，在每次迭代中<strong>保证</strong>近似约束满足。</p>
+<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p>CMDP：增加了约束条件，限制了该MDP允许的策略集。</p>
+<p><em>“A constrained Markov decision process (CMDP) is an MDP augmented with  constraints that restrict the set of allowable policies for that MDP”</em></p>
+<p>已有利用启发式算法或是基于原始对偶方法的方法进行CMDP的研究，但无法保证每个学习过程中都能满足约束，存在保证了约束的工作，但假设条件太多，不通用。</p>
+<p>其他与之前笔记重复内容不再赘述。</p>
+<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><p><strong>CMDP：</strong></p>
+<script type="math/tex; mode=display">
+C_{i}: J_{C_{i}}(\pi)=\mathrm{E}\left[\sum_{t=0}^{\infty} \gamma^{t} C_{i}\left(s_{t}, a_{t}, s_{t+1}\right)\right]\\
+\Pi_{C} \doteq\left\{\pi \in \Pi: \forall i, J_{C_{i}}(\pi) \leq d_{i}\right\}\\
+\pi^{*}=\arg \max _{\pi \in \Pi_{C}} J(\pi)</script><p>$J(\pi)$就是折扣return的期望，$J_{C_i}(\pi)$是折扣约束的期望，目标是在满足$J_{C_i}(\pi)&lt;d_i$的情况下最大化$J(\pi)$。</p>
+<p><strong>Constrained Policy Optimization(CPO):</strong></p>
+<p>对于大型的MDP而言，若想得出最优策略是十分复杂的，因此利用神经网络等策略搜索算法逐步解决该问题：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\pi_{k+1}=\arg \max _{\pi \in \Pi_{\theta}}  J(\pi) \\
+& \text { s.t. } D\left(\pi, \pi_{k}\right) \leq \delta
+\end{aligned}</script><p>$D$是度量新旧策略差异的度量函数，每次策略更新是在很小的邻域内。</p>
+<p>所以，对于CMDP而言，其更新可以看作：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\pi_{k+1}=&\arg \max _{\pi \in \Pi_{\theta}}  J(\pi) \\
+\text { s.t. } & J_{C_{i}}(\pi) \leq d_{i} \quad i=1, \ldots, m \\
+& D\left(\pi, \pi_{k}\right) \leq \delta .
+\end{aligned}</script><p>如果完全按照上式进行更新，则也是计算复杂的，所以作者使用了 Trust Region Optimization(TRO)近似计算上式。</p>
+<hr>
+<p>作者首先证明了两个随机策略的returns的差的界限；之后证明了在每次更新时最坏情况下的性能下降保证。</p>
+<p><strong>Policy Performance Bounds</strong></p>
+<p>已有证明表示：</p>
+<script type="math/tex; mode=display">
+J\left(\pi^{\prime}\right)-J(\pi)=\frac{1}{1-\gamma} \underset{s \sim d^{\pi^{\prime} \atop} \atop a \sim \pi^{\prime}}{\mathrm{E}}\left[A^{\pi}(s, a)\right]</script><p>其中$d^{\pi}(s)=(1-\gamma) \sum_{t=0}^{\infty} \gamma^{t} P\left(s_{t}=s \mid \pi\right)$表示discounted 未来状态的分布。（该证明没懂）</p>
+<p><strong>理论1：</strong>对于任意一个关于S的函数f，任意的策略$\pi$和$\pi^{\prime}$，定义估计与真实值的误差为$\delta_{f}\left(s, a, s^{\prime}\right) \doteq R\left(s, a, s^{\prime}\right)+\gamma f\left(s^{\prime}\right)-f(s)$，</p>
+<p>同时定义：</p>
+<script type="math/tex; mode=display">
+\epsilon_{f}^{\pi^{\prime}} \doteq \max _{s}\left|\mathrm{E}_{a \sim \pi^{\prime}, s^{\prime} \sim P}\left[\delta_{f}\left(s, a, s^{\prime}\right)\right]\right|</script><script type="math/tex; mode=display">
+L_{\pi, f}\left(\pi^{\prime}\right) \doteq \underset{s \sim d^{\pi} ,a \sim \pi  \atop s^{\prime} \sim P}{\mathrm{E}}\left[\left(\frac{\pi^{\prime}(a \mid s)}{\pi(a \mid s)}-1\right) \delta_{f}\left(s, a, s^{\prime}\right)\right]</script><script type="math/tex; mode=display">
+D_{\pi, f}^{\pm}\left(\pi^{\prime}\right) \doteq \frac{L_{\pi, f}\left(\pi^{\prime}\right)}{1-\gamma} \pm \frac{2 \gamma \epsilon_{f}^{\pi^{\prime}}}{(1-\gamma)^{2}} \underset{s \sim d^{\pi}}{\mathrm{E}}\left[D_{T V}\left(\pi^{\prime} \| \pi\right)[s]\right]</script><p>其中$D_{TV}\left(\pi^{\prime} | \pi\right)[s]=(1 / 2) \sum_{a}\left|\pi^{\prime}(a \mid s)-\pi(a \mid s)\right|$。则以下界限存在：</p>
+<script type="math/tex; mode=display">
+D_{\pi, f}^{+}\left(\pi^{\prime}\right) \geq J\left(\pi^{\prime}\right)-J(\pi) \geq D_{\pi, f}^{-}\left(\pi^{\prime}\right)</script><p><strong>推论1：</strong>对任意策略$\pi^{\prime}$,$\pi$，有$\epsilon^{\pi^{\prime}} \doteq \max _{s}\left|\mathrm{E}_{a \sim \pi^{\prime}}\left[A^{\pi}(s, a)\right]\right|$ ，则以下界限存在：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&J\left(\pi^{\prime}\right)-J(\pi) \\
+&\geq \frac{1}{1-\gamma} \underset{s \sim d^{\pi} \atop a \sim \pi^{\prime}}{\mathrm{E}}\left[A^{\pi}(s, a)-\frac{2 \gamma \epsilon^{\pi^{\prime}}}{1-\gamma} D_{T V}\left(\pi^{\prime} \| \pi\right)[s]\right]
+\end{aligned}</script><p><strong>推论2：</strong>对任意策略$\pi^{\prime}$,$\pi$，任意代价函数$C_i$，且$\epsilon_{C_{i}}^{\pi^{\prime}} \doteq \max _{s}\left|\mathrm{E}_{a \sim \pi^{\prime}}\left[A_{C_{i}}^{\pi}(s, a)\right]\right|$，则以下界限成立：</p>
+<script type="math/tex; mode=display">
+J_{C_{i}}\left(\pi^{\prime}\right)-J_{C_{i}}(\pi)
+\leq \frac{1}{1-\gamma} \underset{s \sim d^{\pi} \atop a \sim \pi^{\prime}}{\mathrm{E}}\left[A_{C_{i}}^{\pi}(s, a)+\frac{2 \gamma \epsilon_{C_{i}}^{\prime}}{1-\gamma} D_{T V}\left(\pi^{\prime} \| \pi\right)[s]\right]</script><p>上述理论和证明定义的界限都是针对<strong>TV散度</strong>而言的，而信域方法是利用<strong>KL散度</strong>，故通过Pinsker不等式将二者建立联系如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\underset{s \sim d^{\pi}}{\mathrm{E}}\left[D_{T V}\left(\pi^{\prime} \| \pi\right)[s]\right] & \leq \underset{s \sim d^{\pi}}{\mathrm{E}}\left[\sqrt{\frac{1}{2} D_{K L}\left(\pi^{\prime} \| \pi\right)[s]}\right] \\
+& \leq \sqrt{\frac{1}{2} \underset{s \sim d^{\pi}}{\mathrm{E}}\left[D_{K L}\left(\pi^{\prime} \| \pi\right)[s]\right]}
+\end{aligned}</script><p>KL散度计算公式为：$K L(p | q)=\sum p(x) \log \frac{p(x)}{q(x)}$。</p>
+<p><strong>推论3：</strong>将理论1和推论1、2中的TV散度换为KL散度即可得到一组和KL散度相关的边界条件。</p>
+<p><strong>Trust Region Methods</strong></p>
+<p>信赖域算法的策略更新采取以下形式：</p>
+<script type="math/tex; mode=display">
+\begin{array}{r}
+\pi_{k+1}=\arg \max _{\pi \in \Pi_{\theta}} \underset{s \sim d^{\pi} k}{\mathrm{E}}\left[A^{\pi_{k}}(s, a)\right] \\
+\text { s.t. } \bar{D}_{K L}\left(\pi \| \pi_{k}\right) \leq \delta
+\end{array}</script><p>其中$D_{KL}$的约束被称为信赖域（策略更新前后的策略性能之差可用优势函数的折扣累加期望）。</p>
+<p><strong>命题1（性能保证）：</strong>假设$\pi_{k}$按照式（12）进行更新，则策略更新前后的性能差异有：</p>
+<script type="math/tex; mode=display">
+J\left(\pi_{k+1}\right)-J\left(\pi_{k}\right) \geq \frac{-\sqrt{2 \delta} \gamma \epsilon^{\pi_{k+1}}}{(1-\gamma)^{2}}
+\\
+where \quad\epsilon^{\pi_{k+1}}=\max _{s}\left|\mathrm{E}_{a \sim \pi_{k+1}}\left[A^{\pi_{k}}(s, a)\right]\right|.</script><p>考虑信赖域的约束条件和安全约束条件，结合推论1、2、3，有：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\pi_{k+1}=\arg \max _{\pi \in \Pi_{\theta}} \underset{s \sim d^{\pi_{k}} \atop a \sim \pi}{\mathrm{E}}\left[A^{\pi_{k}}(s, a)\right]-\alpha_{k} \sqrt{\bar{D}_{K L}\left(\pi \| \pi_{k}\right)} \\
+&\text { s.t. } J_{C_{i}}\left(\pi_{k}\right)+\underset{s \sim d^{\pi_{k}} \atop a \sim \pi}{\mathrm{E}}\left[\frac{A_{C_{i}}^{\pi_{k}}(s, a)}{1-\gamma}\right]+\beta_{k}^{i} \sqrt{\bar{D}_{K L}\left(\pi \| \pi_{k}\right)} \leq d_{i}
+\end{aligned}</script><p>基于此，作者提出<strong>CPO</strong>：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\pi_{k+1}=& \arg \max _{\pi \in \Pi_{\theta}} \underset{s \sim d^{\pi_{k}}}{\mathrm{E}}\left[A^{\pi_{k}}(s, a)\right] \\
+\text { s.t. } &J_{C_{i}}\left(\pi_{k}\right)+\frac{1}{1-\gamma} \underset{s \sim d^{\pi_{k}}}{\mathrm{E}}\left[A_{C_{i}}^{\pi_{k}}(s, a)\right] \leq d_{i} \quad \forall i \\
+& \bar{D}_{K L}\left(\pi \| \pi_{k}\right) \leq \delta .
+\end{aligned}</script><p>​    因为这是一个信赖域方法，所以继承了命题1的性能保证。此外，根据推论2和3，又<strong>近似满足</strong>安全约束。故最终达到了满足安全约束的性能保证。</p>
+<p><strong>命题2（CPO更新的最坏情况）：</strong>安全约束$C_i-return$的上界为：    </p>
+<script type="math/tex; mode=display">
+J_{C_{i}}\left(\pi_{k+1}\right) \leq d_{i}+\frac{\sqrt{2 \delta} \gamma \epsilon_{C_{i}}^{\pi_{k+1}}}{(1-\gamma)^{2}}
+\\
+where \quad\epsilon_{C_{i}}^{\pi_{k+1}}=\max _{s}\left|\mathrm{E}_{a \sim \pi_{k+1}}\left[A_{C_{i}}^{\pi_{k}}(s, a)\right]\right|.</script><p><strong>CPO如何求解？</strong></p>
+<p>定义$c_{i}=J_{C_i}(\pi_k)-d$，则公式（15）可以近似为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\theta_{k+1}=\arg \max _{\theta} & g^{T}\left(\theta-\theta_{k}\right) \\
+\text { s.t. } \quad & c_{i}+b_{i}^{T}\left(\theta-\theta_{k}\right) \leq 0 \quad i=1, \ldots, m \\
+& \frac{1}{2}\left(\theta-\theta_{k}\right)^{T} H\left(\theta-\theta_{k}\right) \leq \delta
+\end{aligned}</script><p>$H$是费希尔信息矩阵，总是半正定的且式（17）优化问题是<strong>凸的</strong>（上式是一个带线性和二次约束的线性目标函数凸优化问题(LQCLP)），故可以用拉格朗日对偶方法求解：</p>
+<script type="math/tex; mode=display">
+\max _{\lambda \geq 0 \atop \nu \succeq 0} \frac{-1}{2 \lambda}\left(g^{T} H^{-1} g-2 r^{T} \nu+\nu^{T} S \nu\right)+\nu^{T} c-\frac{\lambda \delta}{2}</script><p>其中$r \doteq g^{T} H^{-1} B, S \doteq B^{T} H^{-1} B$。若$\lambda^<em>，v^</em>$是式（18）的解，则原问题的解为：</p>
+<script type="math/tex; mode=display">
+\theta^{*}=\theta_{k}+\frac{1}{\lambda^{*}} H^{-1}\left(g-B \nu^{*}\right)</script><p>由于近似是存在误差的，有时利用式（17）是安全有效的，但对于不可行的情况，作者利用下式更新：</p>
+<script type="math/tex; mode=display">
+\theta^{*}=\theta_{k}-\sqrt{\frac{2 \delta}{b^{T} H^{-1} b}} H^{-1} b</script><p>该更新用于信赖域和约束域的交集为空集时采取的更新措施。</p>
+<p>伪代码：</p>
+<p><img src="/2022/03/11/Robust%20DRL-4/image-20220307152139547.png" alt="image-20220307152139547"></p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2022/03/11/Robust%20DRL-4/image-20220307152526198.png" alt="image-20220307152526198"></p>
+<p><em>CPO保持在限制内（感觉都在限制值那块聚集？）更多 TRPO无效</em></p>
+<p><img src="/2022/03/11/Robust%20DRL-4/image-20220307152950704.png" alt="image-20220307152950704"></p>
+<p><em>CPO+cost shaping 更有效</em></p>
+
     </div>
 
     
     
     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/03/05/Robust%20DRL-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="Wan Xu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wanxu's notes">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/05/Robust%20DRL-3/" class="post-title-link" itemprop="url">Robust DRL学习笔记（3）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-04 16:00:30 / 修改时间：08:01:33" itemprop="dateCreated datePublished" datetime="2022-03-04T16:00:30Z">2022-03-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文解读</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>872</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Reinforcement learning control of constrained dynamic systems with uniformly ultimate boundedness stability guarantee</strong><br></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/05/Robust%20DRL-3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Wan Xu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://waunx.github.io/2022/03/11/Robust%20DRL-4/" title="Robust DRL学习笔记（4）">https://waunx.github.io/2022/03/11/Robust DRL-4/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/Robust-DRL/" rel="tag"># Robust DRL</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/02/27/Robust%20DRL-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="Wan Xu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wanxu's notes">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/27/Robust%20DRL-2/" class="post-title-link" itemprop="url">Robust DRL学习笔记（2）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-26 21:36:30" itemprop="dateCreated datePublished" datetime="2022-02-26T21:36:30Z">2022-02-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-04 07:58:21" itemprop="dateModified" datetime="2022-03-04T07:58:21Z">2022-03-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文解读</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3k</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Safe Model-based Reinforcement Learning with Stability Guarantees</strong><br></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/02/27/Robust%20DRL-2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/02/23/Robust-DRL-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="Wan Xu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wanxu's notes">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/23/Robust-DRL-1/" class="post-title-link" itemprop="url">Robust DRL学习笔记（1）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-22 21:36:30" itemprop="dateCreated datePublished" datetime="2022-02-22T21:36:30Z">2022-02-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-23 12:44:34" itemprop="dateModified" datetime="2022-02-23T12:44:34Z">2022-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文解读</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.1k</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>End-to-End Safe Reinforcement Learning through Barrier Functions for Safety-Critical Continuous Control Tasks</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/02/23/Robust-DRL-1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/05/Robust%20DRL-3/" rel="prev" title="Robust DRL学习笔记（3）">
+      <i class="fa fa-chevron-left"></i> Robust DRL学习笔记（3）
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -575,6 +449,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="nav-number">1.</span> <span class="nav-text">论文信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">基本思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">研究背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%86%85%E5%AE%B9"><span class="nav-number">4.</span> <span class="nav-text">详细内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">实验结果</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
