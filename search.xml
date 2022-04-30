@@ -326,9 +326,10 @@ where \quad\epsilon_{C_{i}}^{\pi_{k+1}}=\max _{s}\left|\mathrm{E}_{a \sim \pi_{k
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/04/30/QP-1/</url>
-    <content><![CDATA[<h2 id="Barrier-Function学习笔记"><a href="#Barrier-Function学习笔记" class="headerlink" title="Barrier Function学习笔记"></a>Barrier Function学习笔记</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>Barrier Function最先用于优化问题，现在也有研究利用障碍函数将约束最优控制方法转化为无约束最优控制。</p>
+    <title>Barrier Function学习笔记</title>
+    <url>/2022/05/01/QP-1/</url>
+    <content><![CDATA[<h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>Barrier Function最先用于优化问题，现在也有研究利用障碍函数将约束最优控制方法转化为无约束最优控制。</p>
+<span id="more"></span>
 <p>通常使用与集合C相关联的障碍函数的两个概念：</p>
 <p><strong>（1）Reciprocal Barrier Function(RBF)</strong></p>
 <p>$x$在集合$C$的边界处，障碍函数$B(x)$无界：$B(x) \rightarrow \infty$ 当 $x \rightarrow \partial \mathcal{C}$</p>
@@ -394,7 +395,7 @@ L_{f} h(x) \geq-\alpha(h(x))
 <p>互斥控制屏障函数。</p>
 <p><strong>二者与前向不变性的关系</strong>：</p>
 <p>ZBF和RBF均为$\operatorname{int}(\mathcal C)$前向不变性的充分条件</p>
-<p><img src="/2022/04/30/QP-1/image-20220423164317970.png" alt="image-20220423164317970"></p>
+<p><img src="/2022/05/01/QP-1/image-20220423164317970.png" alt="image-20220423164317970"></p>
 <h3 id="利用RBF-amp-ZBF设计CBF"><a href="#利用RBF-amp-ZBF设计CBF" class="headerlink" title="利用RBF&amp;ZBF设计CBF"></a>利用RBF&amp;ZBF设计CBF</h3><p>虽然障碍函数是验证集合不变性的重要工具，但它们不能直接用于设计强制不变性的控制器。</p>
 <h4 id="RCBF"><a href="#RCBF" class="headerlink" title="RCBF"></a>RCBF</h4><p>考虑一个仿射控制系统：</p>
 <script type="math/tex; mode=display">
@@ -477,8 +478,14 @@ L_{f} B_{F}(x)+L_{g} B_{F}(x) u-\frac{\gamma}{B_{F}(x)} \leq 0
 \end{equation}</script><p>则$\operatorname{Int}\left(\mathcal{C}_{F}\right)$是前向不变的。</p>
 <p>这样，我们就可以利用QP去解出最优的$u$。</p>
 <p>结果：</p>
-<p><img src="/2022/04/30/QP-1/image-20220423194127174.png" alt="image-20220423194127174"></p>
+<p><img src="/2022/05/01/QP-1/image-20220423194127174.png" alt="image-20220423194127174"></p>
 <p>可以看到无论是横行位移还是横向加速度都在限定范围内。</p>
 ]]></content>
+      <categories>
+        <category>数学基础</category>
+      </categories>
+      <tags>
+        <tag>CBF</tag>
+      </tags>
   </entry>
 </search>
