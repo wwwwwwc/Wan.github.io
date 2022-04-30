@@ -325,4 +325,160 @@ where \quad\epsilon_{C_{i}}^{\pi_{k+1}}=\max _{s}\left|\mathrm{E}_{a \sim \pi_{k
         <tag>Robust DRL</tag>
       </tags>
   </entry>
+  <entry>
+    <title></title>
+    <url>/2022/04/30/QP-1/</url>
+    <content><![CDATA[<h2 id="Barrier-Function学习笔记"><a href="#Barrier-Function学习笔记" class="headerlink" title="Barrier Function学习笔记"></a>Barrier Function学习笔记</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>Barrier Function最先用于优化问题，现在也有研究利用障碍函数将约束最优控制方法转化为无约束最优控制。</p>
+<p>通常使用与集合C相关联的障碍函数的两个概念：</p>
+<p><strong>（1）Reciprocal Barrier Function(RBF)</strong></p>
+<p>$x$在集合$C$的边界处，障碍函数$B(x)$无界：$B(x) \rightarrow \infty$ 当 $x \rightarrow \partial \mathcal{C}$</p>
+<p><strong>（2）Zeroing Barrier Function(ZBF)</strong></p>
+<p>$x$在集合$C$的边界处，障碍函数$B(x)$为0：$h(x) \rightarrow 0$ 当 $x \rightarrow \partial \mathcal{C}$</p>
+<p>对于这两种情况，若$B$或$h$满足Lyapunov-like条件，则在集合C内的前向不变性是可以保证的。</p>
+<h3 id="Notation"><a href="#Notation" class="headerlink" title="Notation"></a>Notation</h3><p>$\operatorname{Int}(\mathcal{C})$ 和$\partial \mathcal{C}$分别表示集合$C$的内部和边界。</p>
+<p>定义一个中心在0处的开球： $B_{\varepsilon}=\{x \in$ $\left.\mathbb{R}^{n} \mid|x|&lt;\varepsilon\right\}$, $\varepsilon \in \mathbb{R}^{+}$</p>
+<p>若一个连续函数定义域和值域均为非负数，且严格单调递增，在0处取0，则该函数属于$K$类：</p>
+<p>$\beta_{1}:[0, a) \rightarrow[0, \infty)$ , $a&gt;0$ 且 $\beta_{1}(0)=0$.</p>
+<p>若一个连续函数定义域和值域可以取负数，且严格单调递增，在0处取0，则该函数属于扩展$K$类：</p>
+<p>$\alpha:(-b, a) \rightarrow(-\infty, \infty)$， $a, b&gt;0$ 且$\alpha(0)=0$.</p>
+<p>sup：上确界, inf：下确界</p>
+<h3 id="RBF-amp-ZBF"><a href="#RBF-amp-ZBF" class="headerlink" title="RBF &amp; ZBF"></a>RBF &amp; ZBF</h3><p>考虑一个非线性系统：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\dot{x}=f(x)
+\end{equation}</script><h4 id="RBF"><a href="#RBF" class="headerlink" title="RBF"></a>RBF</h4><p>集合C满足：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{aligned}
+\mathcal{C} &=\left\{x \in \mathbb{R}^{n}: h(x) \geq 0\right\} \\
+\partial \mathcal{C} &=\left\{x \in \mathbb{R}^{n}: h(x)=0\right\} \\
+\operatorname{Int}(\mathcal{C}) &=\left\{x \in \mathbb{R}^{n}: h(x)>0\right\}
+\end{aligned}
+\end{equation}</script><p>满足Lyapunov-like条件的BF候选函数有：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+B(x)=-\log \left(\frac{h(x)}{1+h(x)}\right)
+\end{equation}</script><p>该函数满足以下两条基本条件：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\inf _{x \in \operatorname{Int}(\mathcal{C})} B(x) \geq 0, \quad \lim _{x \rightarrow \partial \mathcal{C}} B(x)=\infty
+\end{equation}</script><p>那么问题来了，设计什么条件才能使$B(x)$在$\operatorname{Int}(\mathcal{C})$内是前向不变的呢？</p>
+<p>理论上应该设计条件$\dot{B} \leq 0$，但这样是没必要的，我们只需要在越接近$C$的边界处设置该标准即可。</p>
+<p>故设计条件：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\dot{B} \leq \frac{\gamma}{B}
+\end{equation}</script><p>使得$B$在远离边界时可以增大，越接近边界增大速率越接近于0（因为B在边界处趋于无穷，上述条件使其导数趋于0）。</p>
+<p>除此之外，另一个可能的候选函数为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+B(x) = \frac{1}{h(x)}
+\end{equation}</script><p>RBF更一般的形式：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{aligned}
+&\frac{1}{\alpha_{1}(h(x))} \leq B(x) \leq \frac{1}{\alpha_{2}(h(x))}\\
+&L_{f} B(x) \leq \alpha_{3}(h(x)) .
+\end{aligned}
+\end{equation}</script><p>其中，α1，α2，α3是上述定义的K类函数，$h(x)$是连续可微函数。</p>
+<p><strong>定理1</strong>：给定动态系统（1）和一个由连续可微函数$h$定义的集合$C$，如果存在$B$是一个RBF，那么在$\operatorname{Int}(\mathcal{C})$上是前向不变的。</p>
+<h4 id="ZBF"><a href="#ZBF" class="headerlink" title="ZBF"></a>ZBF</h4><p>在RBF定义中，当其自变量接近C的边界时，RBF趋向于无穷大，然而，当考虑real-time/embedded implementations（不理解）时，这可能是不希望被达到的。故设计了ZBF。</p>
+<p>一般的ZBF形式如下：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+L_{f} h(x) \geq-\alpha(h(x))
+\end{equation}</script><p>其中$\alpha$是扩展K函数。</p>
+<p><em>注意：将$h$定义在一个比$C$ 大的集合$D$上可以考虑模型扰动的影响。</em></p>
+<p>和定理1类似，ZBF的存在可以保证$\operatorname{Int}(\mathcal C)$的前向不变性。</p>
+<p>且即使初始位置在集合$\mathcal C$之外，也有$x$渐进收敛于$\mathcal C$。</p>
+<p>互斥控制屏障函数。</p>
+<p><strong>二者与前向不变性的关系</strong>：</p>
+<p>ZBF和RBF均为$\operatorname{int}(\mathcal C)$前向不变性的充分条件</p>
+<p><img src="/2022/04/30/QP-1/image-20220423164317970.png" alt="image-20220423164317970"></p>
+<h3 id="利用RBF-amp-ZBF设计CBF"><a href="#利用RBF-amp-ZBF设计CBF" class="headerlink" title="利用RBF&amp;ZBF设计CBF"></a>利用RBF&amp;ZBF设计CBF</h3><p>虽然障碍函数是验证集合不变性的重要工具，但它们不能直接用于设计强制不变性的控制器。</p>
+<h4 id="RCBF"><a href="#RCBF" class="headerlink" title="RCBF"></a>RCBF</h4><p>考虑一个仿射控制系统：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\dot{x}=f(x)+g(x) u
+\end{equation}</script><p>$f$ 和 $g$ 是局部李普希茨连续，$x \in \mathbb{R}^{n}$ 且$u \in U \subset \mathbb{R}^{m}$，其中$U$定义为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+U=\left\{u \in \mathbb{R}^{m} \mid A_{0} u \leq b_{0}\right\}
+\end{equation}</script><p>其中$A_0$是$p \times m$矩阵，$b_0$是$p \times 1$向量，在无约束的系统动态下，$\operatorname{Int}(\mathcal{C})$不是前向不变的。</p>
+<p>那么根据RCBF的定理1，若存在$\mathcal K$类函数α1，α2，α3，使得：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{gathered}
+\frac{1}{\alpha_{1}(h(x))} \leq B(x) \leq \frac{1}{\alpha_{2}(h(x))} \\
+\inf _{u \in U}\left[L_{f} B(x)+L_{g} B(x) u-\alpha_{3}(h(x))\right] \leq 0
+\end{gathered}
+\end{equation}</script><p>即若我们选取的控制动作u满足下述集合：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+K_{\mathrm{rcbf}}(x)=\left\{u \in U: L_{f} B(x)+L_{g} B(x) u-\alpha_{3}(h(x)) \leq 0\right\}
+\end{equation}</script><p>则可以保证C的前向不变性，其中，$h(x)$是之前公式3定义的连续可微函数。</p>
+<h4 id="ZCBF"><a href="#ZCBF" class="headerlink" title="ZCBF"></a>ZCBF</h4><p>同理，若存在扩展$\mathcal K$类函数$\alpha$，使得：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\sup _{u \in U}\left[L_{f} h(x)+L_{g} h(x) u+\alpha(h(x))\right] \geq 0, \forall x \in \mathcal{D}
+\end{equation}</script><script type="math/tex; mode=display">
+\begin{equation}
+K_{\mathrm{zcbf}}(x)=\left\{u \in U: L_{f} h(x)+L_{g} h(x) u+\alpha(h(x)) \geq 0\right\}
+\end{equation}</script><p>其中，$D$是比$C$大一些的集合。</p>
+<h3 id="CLF-CBF-QP"><a href="#CLF-CBF-QP" class="headerlink" title="CLF-CBF-QP"></a>CLF-CBF-QP</h3><p>目的是利用QP来协调控制效果和安全约束。</p>
+<p>首先写出系统动态：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\left(\begin{array}{c}
+\dot{x}_{1} \\
+\dot{x}_{2}
+\end{array}\right)=\underbrace{\left(\begin{array}{c}
+f_{1}\left(x_{1}, x_{2}\right) \\
+f_{2}\left(x_{1}, x_{2}\right)
+\end{array}\right)}_{f(x)}+\underbrace{\left(\begin{array}{c}
+g_{1}\left(x_{1}, x_{2}\right) \\
+0
+\end{array}\right)}_{g(x)} u
+\end{equation}</script><p>可以看出状态$x_1$是受控状态，$x_2$是不受控状态。</p>
+<p>指数稳定控制李亚普诺夫函数<strong>Exponentially stabilizing Control Lyapunov Function(CLF)</strong>的一般形式如下：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{gathered}
+c_{1}\left\|x_{1}\right\|^{2} \leq V(x) \leq c_{2}\left\|x_{1}\right\|^{2} \\
+\inf _{u \in U}\left[L_{f} V(x)+L_{g} V(x) u+c_{3} V(x)\right] \leq 0
+\end{gathered}
+\end{equation}</script><p>因此，我们可以利用CLF作为控制性能目标的约束，CBF作为安全目标的约束设立QP，通过放松CLF条件（式17）的约束，并调整松弛参数上的权重，QP可以在保证安全性的情况下协调性能和安全性之间的权衡。具体而言：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{aligned}
+\mathbf{u}^{*}(x)=& \underset{\mathbf{u}=(u, \delta) \in \mathbb{R}^{m} \times \mathbb{R}}{\operatorname{argmin}} \frac{1}{2} \mathbf{u}^{\top} H(x) \mathbf{u}+F(x)^{\top} \mathbf{u} \\
+\text { s.t. } & L_{f} V(x)+L_{g} V(x) u+c_{3} V(x)-\delta \leq 0, \\
+& L_{f} B(x)+L_{g} B(x) u-\alpha(h(x)) \leq 0,
+\end{aligned}
+\end{equation}</script><p>其中 $c_{3}&gt;0$ 且是常数， $\alpha$ 属于类别 $\mathcal{K}, H(x) \in$ $\mathbb{R}^{(m+1) \times(m+1)}$ 正定， $F(x) \in \mathbb{R}^{m+1}$。</p>
+<h3 id="Eg-Lane-Keeping-Via-QPs"><a href="#Eg-Lane-Keeping-Via-QPs" class="headerlink" title="Eg: Lane Keeping Via QPs"></a>Eg: Lane Keeping Via QPs</h3><p>使用基于CBF的QP来考虑车道保持(LK)问题，该QP旨在使车辆在可能弯曲的车道上保持“中心”。假设车辆具有恒定的纵向速度，这样我们只需要关注车辆的横向运动。</p>
+<p>安全约束：</p>
+<p>$|y| \leq y_{\max }$，车辆距车道中心的位移小于给定的常量$y_{max}$</p>
+<p>$|\ddot{y}| \leq a_{\max }$，为了驾驶员的舒适性，侧向加速度需要有界</p>
+<p>要结合CBF，主要需要找两个函数，一个$h_F(x)$满足式3，一个BF函数，可选为RBF/ZBF如上式4、7、12等。</p>
+<p>例如此题选择$h_F(x)$：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+h_{F}(x)=\left(y_{\max }-\operatorname{sgn}(\dot{y}) y\right)-\frac{1}{2} \frac{\dot{y}^{2}}{a_{\max }}
+\end{equation}</script><p>则有$\mathcal{C}_{F}:=\left\{x \mid h_{F}(x) \geq 0\right\}$。</p>
+<p>选择$B_{F}(x)$：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+B_{F}(x)=\frac{1}{h_F(x)}
+\end{equation}</script><p>则对于$x \in \operatorname{Int}\left(\mathcal{C}_{F}\right)$，若总存在控制动作$u$：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+L_{f} B_{F}(x)+L_{g} B_{F}(x) u-\frac{\gamma}{B_{F}(x)} \leq 0
+\end{equation}</script><p>则$\operatorname{Int}\left(\mathcal{C}_{F}\right)$是前向不变的。</p>
+<p>这样，我们就可以利用QP去解出最优的$u$。</p>
+<p>结果：</p>
+<p><img src="/2022/04/30/QP-1/image-20220423194127174.png" alt="image-20220423194127174"></p>
+<p>可以看到无论是横行位移还是横向加速度都在限定范围内。</p>
+]]></content>
+  </entry>
 </search>
