@@ -20,28 +20,42 @@
     var CONFIG = {"hostname":"waunx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Wanxu&#39;s notes">
-<meta property="og:url" content="https://waunx.github.io/index.html">
+  <meta name="description" content="论文信息Property Inference from Poisoning Melissa Chase， Esha Ghosh， Saeed Mahloujifar Microsoft Research Princeton University 基本思路攻击者可以恶意控制部分训练数据(中毒数据)以增加泄密性，从而进行属性推理。 结论： Poisoning Attacks Increasing In">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模型推断攻击学习笔记（1）">
+<meta property="og:url" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/index.html">
 <meta property="og:site_name" content="Wanxu&#39;s notes">
+<meta property="og:description" content="论文信息Property Inference from Poisoning Melissa Chase， Esha Ghosh， Saeed Mahloujifar Microsoft Research Princeton University 基本思路攻击者可以恶意控制部分训练数据(中毒数据)以增加泄密性，从而进行属性推理。 结论： Poisoning Attacks Increasing In">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220516151840452.png">
+<meta property="og:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220517101736190.png">
+<meta property="og:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220517102517812.png">
+<meta property="og:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220517102529000.png">
+<meta property="og:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220517105124915.png">
+<meta property="og:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220517105726819.png">
+<meta property="og:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220517105737425.png">
+<meta property="og:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220517111944829.png">
+<meta property="article:published_time" content="2022-05-17T11:20:30.000Z">
+<meta property="article:modified_time" content="2022-05-17T03:24:25.941Z">
 <meta property="article:author" content="Wan Xu">
+<meta property="article:tag" content="Property Inference">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://waunx.github.io/2022/05/17/Property%20Inference-1/image-20220516151840452.png">
 
-<link rel="canonical" href="https://waunx.github.io/">
+<link rel="canonical" href="https://waunx.github.io/2022/05/17/Property%20Inference-1/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Wanxu's notes</title>
+  <title>模型推断攻击学习笔记（1） | Wanxu's notes</title>
   
 
 
@@ -180,9 +194,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -198,10 +213,9 @@
       <meta itemprop="name" content="Wanxu's notes">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/17/Property%20Inference-1/" class="post-title-link" itemprop="url">模型推断攻击学习笔记（1）</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          模型推断攻击学习笔记（1）
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -241,7 +255,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Property Inference from Poisoning</strong></p>
+        <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Property Inference from Poisoning</strong></p>
 <p>Melissa Chase， Esha Ghosh， Saeed Mahloujifar</p>
 <p>Microsoft Research Princeton University</p>
 <h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>攻击者可以恶意控制部分训练数据(中毒数据)以增加泄密性，从而进行属性推理。</p>
@@ -309,443 +323,50 @@ D_{t} \equiv t \cdot D_{+}+(1-t) \cdot D_{-}</script><h4 id="带有贝叶斯最�
 <h3 id="实验验证"><a href="#实验验证" class="headerlink" title="实验验证"></a>实验验证</h3><p><img src="/2022/05/17/Property%20Inference-1/image-20220517111944829.png" alt="image-20220517111944829"></p>
 <p>重点看推断属性的accuracy。</p>
 
-      
     </div>
 
     
     
     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/05/01/QP-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="Wan Xu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wanxu's notes">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/01/QP-1/" class="post-title-link" itemprop="url">Barrier Function学习笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-30 18:53:30 / 修改时间：10:53:25" itemprop="dateCreated datePublished" datetime="2022-04-30T18:53:30Z">2022-04-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">数学基础</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.4k</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>Barrier Function最先用于优化问题，现在也有研究利用障碍函数将约束最优控制方法转化为无约束最优控制。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/05/01/QP-1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Wan Xu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://waunx.github.io/2022/05/17/Property%20Inference-1/" title="模型推断攻击学习笔记（1）">https://waunx.github.io/2022/05/17/Property Inference-1/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/Property-Inference/" rel="tag"># Property Inference</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/03/11/Robust%20DRL-4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="Wan Xu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wanxu's notes">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/11/Robust%20DRL-4/" class="post-title-link" itemprop="url">Robust DRL学习笔记（4）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-10 16:00:30 / 修改时间：10:21:49" itemprop="dateCreated datePublished" datetime="2022-03-10T16:00:30Z">2022-03-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文解读</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>6.4k</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Constrained Policy Optimization</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/11/Robust%20DRL-4/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/03/05/Robust%20DRL-3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="Wan Xu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wanxu's notes">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/05/Robust%20DRL-3/" class="post-title-link" itemprop="url">Robust DRL学习笔记（3）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-04 16:00:30 / 修改时间：08:01:33" itemprop="dateCreated datePublished" datetime="2022-03-04T16:00:30Z">2022-03-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文解读</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>872</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Reinforcement learning control of constrained dynamic systems with uniformly ultimate boundedness stability guarantee</strong><br></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/05/Robust%20DRL-3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/01/QP-1/" rel="prev" title="Barrier Function学习笔记">
+      <i class="fa fa-chevron-left"></i> Barrier Function学习笔记
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/02/27/Robust%20DRL-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="Wan Xu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wanxu's notes">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/27/Robust%20DRL-2/" class="post-title-link" itemprop="url">Robust DRL学习笔记（2）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-26 21:36:30" itemprop="dateCreated datePublished" datetime="2022-02-26T21:36:30Z">2022-02-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-04 07:58:21" itemprop="dateModified" datetime="2022-03-04T07:58:21Z">2022-03-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文解读</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3k</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Safe Model-based Reinforcement Learning with Stability Guarantees</strong><br></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/02/27/Robust%20DRL-2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/02/23/Robust-DRL-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="Wan Xu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Wanxu's notes">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/23/Robust-DRL-1/" class="post-title-link" itemprop="url">Robust DRL学习笔记（1）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-22 21:36:30" itemprop="dateCreated datePublished" datetime="2022-02-22T21:36:30Z">2022-02-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-23 12:44:34" itemprop="dateModified" datetime="2022-02-23T12:44:34Z">2022-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文解读</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.1k</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>End-to-End Safe Reinforcement Learning through Barrier Functions for Safety-Critical Continuous Control Tasks</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/02/23/Robust-DRL-1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -798,6 +419,7 @@ D_{t} \equiv t \cdot D_{+}+(1-t) \cdot D_{-}</script><h4 id="带有贝叶斯最�
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E4%BF%A1%E6%81%AF"><span class="nav-number">1.</span> <span class="nav-text">论文信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">基本思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">研究背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E5%86%85%E5%AE%B9"><span class="nav-number">4.</span> <span class="nav-text">详细内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E6%8E%A8%E6%96%AD%E6%98%AF%E5%90%A6%E6%9E%84%E6%88%90%E9%87%8D%E8%A6%81%E7%9A%84%E5%A8%81%E8%83%81%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">属性推断是否构成重要的威胁模型？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E6%8A%95%E6%AF%92%E6%9D%A5%E8%BF%9B%E8%A1%8C%E5%B1%9E%E6%80%A7%E6%8E%A8%E6%96%AD%EF%BC%9F"><span class="nav-number">4.2.</span> <span class="nav-text">为什么可以通过投毒来进行属性推断？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.3.</span> <span class="nav-text">攻击模型设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%A6%E6%9C%89%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%9C%80%E4%BC%98%E5%88%86%E7%B1%BB%E5%99%A8%E5%8F%AF%E8%AF%81%E6%98%8E%E4%BF%9D%E8%AF%81%E7%9A%84%E7%90%86%E8%AE%BA%E6%94%BB%E5%87%BB"><span class="nav-number">4.4.</span> <span class="nav-text">带有贝叶斯最优分类器可证明保证的理论攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E6%94%BB%E5%87%BB"><span class="nav-number">4.5.</span> <span class="nav-text">评估攻击</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%AA%E4%BB%A3%E7%A0%81"><span class="nav-number">4.6.</span> <span class="nav-text">伪代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E9%AA%8C%E8%AF%81"><span class="nav-number">5.</span> <span class="nav-text">实验验证</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
