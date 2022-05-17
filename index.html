@@ -211,7 +211,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-05-17 11:20:30 / 修改时间：03:24:25" itemprop="dateCreated datePublished" datetime="2022-05-17T11:20:30Z">2022-05-17</time>
+              <time title="创建时间：2022-05-17 11:20:30 / 修改时间：03:25:51" itemprop="dateCreated datePublished" datetime="2022-05-17T11:20:30Z">2022-05-17</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -241,74 +241,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Property Inference from Poisoning</strong></p>
-<p>Melissa Chase， Esha Ghosh， Saeed Mahloujifar</p>
-<p>Microsoft Research Princeton University</p>
-<h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>攻击者可以恶意控制部分训练数据(中毒数据)以增加泄密性，从而进行属性推理。</p>
-<p>结论： <strong>Poisoning Attacks Increasing Information Leakage！</strong></p>
-<h3 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h3><p><strong>推断攻击</strong>：攻击者试图通过检查训练集上的模型来推断训练集的敏感信息。推断攻击有两种主要形式：<strong>成员推理攻击（membership inference）和属性推理攻击（ property inference）</strong>。</p>
-<p>在成员推断攻击中，对手试图推断用于训练给定模型的训练集中<strong>是否存在特殊实例</strong>。在属性推断攻击中，对手试图推断出关于整个训练集的一些<strong>聚合信息</strong>。被推断的属性不需要是训练集中的显式特征，也不需要与训练集标签明显相关。例如，我们将考虑对基于文本的模型(特别是垃圾邮件分类器)的属性推断攻击，该攻击试图学习训练数据集中文档的平均情感(正面或负面)。</p>
-<p><strong>投毒攻击：</strong>训练数据(中毒数据)的某一部分是由希望使训练模型按照自己的兴趣行事的对手精心选择的。</p>
-<p>全局属性推断攻击：从不打算共享的训练模型中推断训练数据集的敏感全局属性，但已有的会需要白盒访问模型，这意味着它被赋予神经网络中的所有权重。（作者的方法是毒化训练数据）</p>
-<p>亚群攻击（subpopulation attack）：毒化部分训练数据，即只有对来自数据中某个亚群的输入的预测受到影响。</p>
-<p>可保证的中毒攻击（poisoning attacks with provable guarantees）：中毒攻击对使用凸损失最小化的学习算法具有可证明的保证，作者的攻击对任何具有良好泛化能力的学习算法都是可证明的，并且不需要干净训练集的知识。</p>
-<h3 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h3><p>模型假设</p>
-<p>考虑一个攻击者：</p>
-<p>（1）可以从样本集中采样并提交一组“中毒”数据，这些数据将与受害者数据集相结合，并用于训练模型。但攻击者不知道从其他来源采样的“干净”训练集；</p>
-<p>（2）攻击者可以对经过训练的模型进行有限次数的black box queries。但仅限查询的样本label，它不会获得模型产生的置信度值，也不会从模型中获得任何内部信息；</p>
-<p>（3）攻击者的目标是推断特定属性的平均值是高于还是低于特定阈值。</p>
-<p>​        属性1：存在于数据集中的属性（例如人口普查数据集中的性别和种族）；</p>
-<p>​        属性2：不作为特征出现在训练数据中，但是可以从那些特征中导出的属性（例如安然数据集中电子邮件中的负面情绪(由情绪分析确定)；</p>
-<p>​        属性3：与训练数据或分类任务不相关的属性（为人口普查和安然数据中的每个数据条目添加了一个独立选择的随机二进制特征）</p>
-<h4 id="属性推断是否构成重要的威胁模型？"><a href="#属性推断是否构成重要的威胁模型？" class="headerlink" title="属性推断是否构成重要的威胁模型？"></a>属性推断是否构成重要的威胁模型？</h4><p>例1：假设一家公司想要使用其内部电子邮件来训练垃圾邮件分类器。这种模型有望揭示哪些单词组合通常表示垃圾邮件，公司可能会乐于分享这些信息。然而，使用属性推断攻击，得到的模型也可能泄露关于公司中电子邮件的总体情绪的信息，这可能是非常敏感的。例如，如果公司电子邮件的情绪在临近财务季度时变得消极，这可能意味着公司的表现低于预期。</p>
-<p>例2：一家金融公司可能愿意分享一个检测欺诈的模型，但可能不愿意透露各种类型的交易量。</p>
-<p>例3：许多较小的公司可能愿意共享一个模型来实现产品价格调整，但是这些公司可能不愿意共享不同类型产品的具体销售数字。</p>
-<h4 id="为什么可以通过投毒来进行属性推断？"><a href="#为什么可以通过投毒来进行属性推断？" class="headerlink" title="为什么可以通过投毒来进行属性推断？"></a>为什么可以通过投毒来进行属性推断？</h4><p>任何加密或硬件辅助解决方案都不会阻止训练数据的一些输入源的数据，在所有这些解决方案中，都没有切实可行的方法来保证输入的数据实际上是正确的。</p>
-<h4 id="攻击模型设计"><a href="#攻击模型设计" class="headerlink" title="攻击模型设计"></a>攻击模型设计</h4><p>将数据集映射到某个假设的类别：</p>
-<script type="math/tex; mode=display">
-L:(\mathcal{X} \times \mathcal{Y})^{*} \rightarrow \mathcal{H}</script><script type="math/tex; mode=display">
-f: \mathcal{X} \rightarrow\{0,1\}</script><p>攻击者的目标是从训练集及H中找到属性f的统计信息，即学习关于 $\hat{f}(\mathcal{T})$ 的信息：</p>
-<script type="math/tex; mode=display">
-\hat{f}=\mathbf{E}_{(x, y) \leftarrow \mathcal{T}}[f(x)]</script><p>将f=0的样本定义为负样本$D_-$，f=1的样本定义为正样本$D_+$，再以一定比例混合：</p>
-<script type="math/tex; mode=display">
-D_{t} \equiv t \cdot D_{+}+(1-t) \cdot D_{-}</script><h4 id="带有贝叶斯最优分类器可证明保证的理论攻击"><a href="#带有贝叶斯最优分类器可证明保证的理论攻击" class="headerlink" title="带有贝叶斯最优分类器可证明保证的理论攻击"></a>带有贝叶斯最优分类器可证明保证的理论攻击</h4><p>预测风险：（数据集中的预测类别和label不同的概率）</p>
-<script type="math/tex; mode=display">
-\operatorname{Risk}(h, D)=\operatorname{Pr}_{(x, y) \leftarrow D}[h(x) \neq y]</script><p>贝叶斯误差：</p>
-<script type="math/tex; mode=display">
-\operatorname{Bayes}(D)=\inf _{h: \mathcal{X} \rightarrow\{0,1\}} \operatorname{Risk}(h, D) .</script><p>贝叶斯最优分类器：</p>
-<script type="math/tex; mode=display">
-\forall x \in \mathcal{X}: h_{D}^{*}(x)=\underset{y \in\{0,1\}}{\operatorname{argmax}} \operatorname{Pr}[Y=y \mid X=x]</script><p>贝叶斯误差是分类器所能期望的最小误差。算法试图通过模仿贝叶斯最优分类器的行为来获得接近贝叶斯误差的错误率。下面，定义学习算法L，可以学习贝叶斯最优分类器的一类分布即使这样一,但即使对于高泛化程度的贝叶斯模型也是容易受到攻击。</p>
-<p>(ε，δ)-贝叶斯最优学习算法：</p>
-<p>给定一个数据集$\mathcal{T} \leftarrow D^{n}$与 从中采集的n 个样本，学习算法输出一个模型 h 使得有 $1-\delta(n)$ 的置信度满足：</p>
-<script type="math/tex; mode=display">
-\operatorname{Risk}(h, D) \leq \operatorname{Bayes}(D)+\varepsilon(n) .</script><p>Signed certainty：</p>
-<p>训练集D中的每个点x的Signed certainty定义为：</p>
-<script type="math/tex; mode=display">
-\operatorname{crt}(x, D)=1-2 \operatorname{Pr}[Y=1 \mid X=x]</script><p><strong>定理</strong>：考虑一个学习算法是(ε，δ)-贝叶斯最优学习算法，对于任意$p,t_0&lt;t_1\in[0,1]$，若存在$\tau \in[0,1]$，满足：</p>
-<script type="math/tex; mode=display">
-\begin{gathered}
-\operatorname{Pr}_{x \leftarrow X}\left[\frac{p+2 \tau \cdot t_{1}}{t_{1}(1-p)}<\operatorname{crt}(x, D) \leq \frac{p-2 \tau \cdot t_{0}}{t_{0}(1-p)}\right. \\
-\wedge \quad f(x)=1]>\frac{2 \epsilon(n)}{\tau}
-\end{gathered}</script><p><strong>则攻击者至少有1-2δ (n)的概率赢得PIWP。</strong></p>
-<p>如果在具有高不确定性的分布中存在足够多的点，且学习算法对于足够多的分布是贝叶斯最优的，那么作者的攻击就能成功地区分 $D_{t_0}$和 $D_{t_1}$。</p>
-<p><img src="/2022/05/17/Property%20Inference-1/image-20220516151840452.png" alt="image-20220516151840452"></p>
-<h4 id="评估攻击"><a href="#评估攻击" class="headerlink" title="评估攻击"></a>评估攻击</h4><p>（1）首先sample一些样本（p概率从投毒数据集中sample (1-p)从原始数据集中sample），假设投毒样本对应的Y都是1</p>
-<p>（2）观察投毒对后验分布的影响：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-\operatorname{Pr}[\tilde{Y}=1 \mid \tilde{X}=x]=& \frac{p}{p+t(1-p)} \\
-&+\frac{t(1-p)}{p+t(1-p)} \cdot \operatorname{Pr}[Y=1 \mid X=x]
-\end{aligned}</script><p><img src="/2022/05/17/Property%20Inference-1/image-20220517101736190.png" alt="image-20220517101736190"></p>
-<p>$t=\operatorname{Pr}[f(X)=1]$表示正常样本中属性为1对应的概率。</p>
-<p>（3）观察对贝叶斯最优分类器的影响：</p>
-<p><img src="/2022/05/17/Property%20Inference-1/image-20220517102517812.png" alt="image-20220517102517812"></p>
-<p><img src="/2022/05/17/Property%20Inference-1/image-20220517102529000.png" alt="image-20220517102529000"></p>
-<h4 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h4><p><img src="/2022/05/17/Property%20Inference-1/image-20220517105124915.png" alt="image-20220517105124915"></p>
-<p><img src="/2022/05/17/Property%20Inference-1/image-20220517105726819.png" alt="image-20220517105726819"></p>
-<p><img src="/2022/05/17/Property%20Inference-1/image-20220517105737425.png" alt="image-20220517105737425"></p>
-<h3 id="实验验证"><a href="#实验验证" class="headerlink" title="实验验证"></a>实验验证</h3><p><img src="/2022/05/17/Property%20Inference-1/image-20220517111944829.png" alt="image-20220517111944829"></p>
-<p>重点看推断属性的accuracy。</p>
-
+          <h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Property Inference from Poisoning</strong><br></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/05/17/Property%20Inference-1/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

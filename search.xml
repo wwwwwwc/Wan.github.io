@@ -491,7 +491,7 @@ L_{f} B_{F}(x)+L_{g} B_{F}(x) u-\frac{\gamma}{B_{F}(x)} \leq 0
   <entry>
     <title>模型推断攻击学习笔记（1）</title>
     <url>/2022/05/17/Property%20Inference-1/</url>
-    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Property Inference from Poisoning</strong></p>
+    <content><![CDATA[<h3 id="论文信息"><a href="#论文信息" class="headerlink" title="论文信息"></a>论文信息</h3><p><strong>Property Inference from Poisoning</strong><br><span id="more"></span></p>
 <p>Melissa Chase， Esha Ghosh， Saeed Mahloujifar</p>
 <p>Microsoft Research Princeton University</p>
 <h3 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h3><p>攻击者可以恶意控制部分训练数据(中毒数据)以增加泄密性，从而进行属性推理。</p>
