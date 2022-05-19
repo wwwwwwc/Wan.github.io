@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"waunx.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="内容概述本文主要针对open-AI开源的SB 3（https:&#x2F;&#x2F;github.com&#x2F;hill-a&#x2F;stable-baselines）中部分DRL算法的损失函数进行分析与解读。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SB中常见DRL算法的损失函数设置">
+<meta property="og:url" content="https://waunx.github.io/2022/05/19/DRL-Loss/index.html">
+<meta property="og:site_name" content="Xu&#39;s notes">
+<meta property="og:description" content="内容概述本文主要针对open-AI开源的SB 3（https:&#x2F;&#x2F;github.com&#x2F;hill-a&#x2F;stable-baselines）中部分DRL算法的损失函数进行分析与解读。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-19T08:36:30.000Z">
+<meta property="article:modified_time" content="2022-05-19T00:53:49.890Z">
+<meta property="article:author" content="Xu Wan">
+<meta property="article:tag" content="Code">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://waunx.github.io/2022/05/19/DRL-Loss/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SB中常见DRL算法的损失函数设置 | Xu's notes</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Xu's notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">AI & Security</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/waunx" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://waunx.github.io/2022/05/19/DRL-Loss/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="Xu Wan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xu's notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SB中常见DRL算法的损失函数设置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-19 08:36:30 / 修改时间：00:53:49" itemprop="dateCreated datePublished" datetime="2022-05-19T08:36:30Z">2022-05-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">代码解读</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="内容概述"><a href="#内容概述" class="headerlink" title="内容概述"></a>内容概述</h3><p>本文主要针对open-AI开源的SB 3（<a target="_blank" rel="noopener" href="https://github.com/hill-a/stable-baselines）中部分DRL算法的损失函数进行分析与解读。">https://github.com/hill-a/stable-baselines）中部分DRL算法的损失函数进行分析与解读。</a><br><span id="more"></span></p>
+<h3 id="DQN"><a href="#DQN" class="headerlink" title="DQN"></a>DQN</h3><p>SB中的DQN提供了普通DQN、DDQN、Dueling DQN、Prioritized Experience Replay四种形式。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">self.act, self._train_step, self.update_target, self.step_model = build_train(</span><br><span class="line">    q_func=partial(self.policy, **self.policy_kwargs),</span><br><span class="line">    ob_space=self.observation_space,</span><br><span class="line">    ac_space=self.action_space,</span><br><span class="line">    optimizer=optimizer,</span><br><span class="line">    gamma=self.gamma,</span><br><span class="line">    grad_norm_clipping=<span class="number">10</span>,</span><br><span class="line">    param_noise=self.param_noise,</span><br><span class="line">    sess=self.sess,</span><br><span class="line">    full_tensorboard_log=self.full_tensorboard_log,</span><br><span class="line">    double_q=self.double_q</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>该函数返回一个tuple，四个返回值均为function，self.act用于选择动作，self._train_step用于训练参数，self.update_target</p>
+<p>用于target网络和eval网络的参数复制，self.step_model用于测试。</p>
+<p>loss部分：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;loss&quot;</span>, reuse=reuse):</span><br><span class="line">    <span class="comment"># set up placeholders</span></span><br><span class="line">    act_t_ph = tf.placeholder(tf.int32, [<span class="literal">None</span>], name=<span class="string">&quot;action&quot;</span>)</span><br><span class="line">    rew_t_ph = tf.placeholder(tf.float32, [<span class="literal">None</span>], name=<span class="string">&quot;reward&quot;</span>)</span><br><span class="line">    done_mask_ph = tf.placeholder(tf.float32, [<span class="literal">None</span>], name=<span class="string">&quot;done&quot;</span>)</span><br><span class="line">    importance_weights_ph = tf.placeholder(tf.float32, [<span class="literal">None</span>], name=<span class="string">&quot;weight&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># q scores for actions which we know were selected in the given state.</span></span><br><span class="line">    q_t_selected = tf.reduce_sum(step_model.q_values * tf.one_hot(act_t_ph, n_actions), axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute estimate of best possible value starting from state at t + 1</span></span><br><span class="line">    <span class="keyword">if</span> double_q:</span><br><span class="line">        q_tp1_best_using_online_net = tf.argmax(double_q_values, axis=<span class="number">1</span>)</span><br><span class="line">        q_tp1_best = tf.reduce_sum(target_policy.q_values * tf.one_hot(q_tp1_best_using_online_net, n_actions), axis=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        q_tp1_best = tf.reduce_max(target_policy.q_values, axis=<span class="number">1</span>)</span><br><span class="line">    q_tp1_best_masked = (<span class="number">1.0</span> - done_mask_ph) * q_tp1_best</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute RHS of bellman equation</span></span><br><span class="line">    q_t_selected_target = rew_t_ph + gamma * q_tp1_best_masked</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute the error (potentially clipped)</span></span><br><span class="line">    td_error = q_t_selected - tf.stop_gradient(q_t_selected_target)</span><br><span class="line">    errors = tf_util.huber_loss(td_error)</span><br><span class="line">    weighted_error = tf.reduce_mean(importance_weights_ph * errors)</span><br><span class="line"></span><br><span class="line">    tf.summary.scalar(<span class="string">&quot;td_error&quot;</span>, tf.reduce_mean(td_error))</span><br><span class="line">    tf.summary.scalar(<span class="string">&quot;loss&quot;</span>, weighted_error)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> full_tensorboard_log:</span><br><span class="line">        tf.summary.histogram(<span class="string">&quot;td_error&quot;</span>, td_error)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># update_target_fn will be called periodically to copy Q network to target Q network</span></span><br><span class="line">    update_target_expr = []</span><br><span class="line">    <span class="keyword">for</span> var, var_target <span class="keyword">in</span> <span class="built_in">zip</span>(<span class="built_in">sorted</span>(q_func_vars, key=<span class="keyword">lambda</span> v: v.name),</span><br><span class="line">                               <span class="built_in">sorted</span>(target_q_func_vars, key=<span class="keyword">lambda</span> v: v.name)):</span><br><span class="line">        update_target_expr.append(var_target.assign(var))</span><br><span class="line">    update_target_expr = tf.group(*update_target_expr)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute optimization op (potentially with gradient clipping)</span></span><br><span class="line">    gradients = optimizer.compute_gradients(weighted_error, var_list=q_func_vars)</span><br><span class="line">    <span class="keyword">if</span> grad_norm_clipping <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">for</span> i, (grad, var) <span class="keyword">in</span> <span class="built_in">enumerate</span>(gradients):</span><br><span class="line">            <span class="keyword">if</span> grad <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                gradients[i] = (tf.clip_by_norm(grad, grad_norm_clipping), var)</span><br></pre></td></tr></table></figure>
+<p>注：</p>
+<p>（1）<em>step_model = q_func(sess, ob_space, ac_space, 1, 1, None, reuse=True, obs_phs=obs_phs)</em>是eval Q network，q_t_selected用了reduce_sum是因为DQN是针对离散动作空间，所以value*onehot是个矩阵（类似[100, 0, 0, 0]）。</p>
+<p>（2）<em>q_tp1_best_masked = (1.0 - done_mask_ph) \</em> q_tp1_best* 考虑了done，所以加了一层mask。</p>
+<p>（3）计算误差包括三部分：首先是<em>q_t_selected - tf.stop_gradient(q_t_selected_target)</em> 的TD error，其次是Huber Loss 的形式，优点是能增强平方误差损失函数(MSE, mean square error)对离群点的鲁棒性：<em>tf_util.huber_loss(td_error)</em>：</p>
+<script type="math/tex; mode=display">
+L_{\delta}(a)= \begin{cases}\frac{1}{2} a^{2}, & \text { for }|a| \leq \delta \\ \delta \cdot\left(|a|-\frac{1}{2} \delta\right), & \text { otherwise }\end{cases}</script><p>可见对于Q与Q target差异较大的情况下，HuberLoss降低了对其的惩罚程度。</p>
+<p>最后是<em>importance_weights_ph</em>，是针对Prioritized Experience Replay而言的。</p>
+<p>（4）计算gradient的时候是针对加权后的loss而言的，并且可以设置gradient clipping。</p>
+<h3 id="PPO"><a href="#PPO" class="headerlink" title="PPO"></a>PPO</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_train_step</span>(<span class="params">self, learning_rate, cliprange, obs, returns, masks, actions, values, neglogpacs, update,</span></span><br><span class="line"><span class="params">                writer, states=<span class="literal">None</span>, cliprange_vf=<span class="literal">None</span></span>)</span><br><span class="line">    advs = returns - values</span><br><span class="line">    advs = (advs - advs.mean()) / (advs.std() + <span class="number">1e-8</span>)</span><br><span class="line">    td_map = &#123;self.train_model.obs_ph: obs, self.action_ph: actions,</span><br><span class="line">              self.advs_ph: advs, self.rewards_ph: returns,</span><br><span class="line">              self.learning_rate_ph: learning_rate, self.clip_range_ph: cliprange,</span><br><span class="line">              self.old_neglog_pac_ph: neglogpacs, self.old_vpred_ph: values&#125;</span><br><span class="line">    <span class="keyword">if</span> states <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        td_map[self.train_model.states_ph] = states</span><br><span class="line">        td_map[self.train_model.dones_ph] = masks</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> cliprange_vf <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> cliprange_vf &gt;= <span class="number">0</span>:</span><br><span class="line">        td_map[self.clip_range_vf_ph] = cliprange_vf</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> states <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        update_fac = <span class="built_in">max</span>(self.n_batch // self.nminibatches // self.noptepochs, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        update_fac = <span class="built_in">max</span>(self.n_batch // self.nminibatches // self.noptepochs // self.n_steps, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> writer <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        policy_loss, value_loss, policy_entropy, approxkl, clipfrac, _ = self.sess.run(</span><br><span class="line">            [self.pg_loss, self.vf_loss, self.entropy, self.approxkl, self.clipfrac, self._train], td_map)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> policy_loss, value_loss, policy_entropy, approxkl, clipfrac</span><br></pre></td></tr></table></figure>
+<p>返回的是策略梯度loss、价值函数loss，policy entropy，KL散度近似值，updated clipping range和training update operation。</p>
+<p>loss部分：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;loss&quot;</span>, reuse=<span class="literal">False</span>):</span><br><span class="line">    self.action_ph = train_model.pdtype.sample_placeholder([<span class="literal">None</span>], name=<span class="string">&quot;action_ph&quot;</span>)</span><br><span class="line">    self.advs_ph = tf.placeholder(tf.float32, [<span class="literal">None</span>], name=<span class="string">&quot;advs_ph&quot;</span>)</span><br><span class="line">    self.rewards_ph = tf.placeholder(tf.float32, [<span class="literal">None</span>], name=<span class="string">&quot;rewards_ph&quot;</span>)</span><br><span class="line">    self.old_neglog_pac_ph = tf.placeholder(tf.float32, [<span class="literal">None</span>], name=<span class="string">&quot;old_neglog_pac_ph&quot;</span>)</span><br><span class="line">    self.old_vpred_ph = tf.placeholder(tf.float32, [<span class="literal">None</span>], name=<span class="string">&quot;old_vpred_ph&quot;</span>)</span><br><span class="line">    self.learning_rate_ph = tf.placeholder(tf.float32, [], name=<span class="string">&quot;learning_rate_ph&quot;</span>)</span><br><span class="line">    self.clip_range_ph = tf.placeholder(tf.float32, [], name=<span class="string">&quot;clip_range_ph&quot;</span>)</span><br><span class="line"></span><br><span class="line">    neglogpac = train_model.proba_distribution.neglogp(self.action_ph)</span><br><span class="line">    self.entropy = tf.reduce_mean(train_model.proba_distribution.entropy())</span><br><span class="line"></span><br><span class="line">    vpred = train_model.value_flat</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Value function clipping: not present in the original PPO</span></span><br><span class="line">    <span class="keyword">if</span> self.cliprange_vf <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># Default behavior (legacy from OpenAI baselines):</span></span><br><span class="line">        <span class="comment"># use the same clipping as for the policy</span></span><br><span class="line">        self.clip_range_vf_ph = self.clip_range_ph</span><br><span class="line">        self.cliprange_vf = self.cliprange</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(self.cliprange_vf, (<span class="built_in">float</span>, <span class="built_in">int</span>)) <span class="keyword">and</span> self.cliprange_vf &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># Original PPO implementation: no value function clipping</span></span><br><span class="line">        self.clip_range_vf_ph = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># Last possible behavior: clipping range</span></span><br><span class="line">        <span class="comment"># specific to the value function</span></span><br><span class="line">        self.clip_range_vf_ph = tf.placeholder(tf.float32, [], name=<span class="string">&quot;clip_range_vf_ph&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> self.clip_range_vf_ph <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># No clipping</span></span><br><span class="line">        vpred_clipped = train_model.value_flat</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># Clip the different between old and new value</span></span><br><span class="line">        <span class="comment"># <span class="doctag">NOTE:</span> this depends on the reward scaling</span></span><br><span class="line">        vpred_clipped = self.old_vpred_ph + \</span><br><span class="line">            tf.clip_by_value(train_model.value_flat - self.old_vpred_ph,</span><br><span class="line">                             - self.clip_range_vf_ph, self.clip_range_vf_ph)</span><br><span class="line"></span><br><span class="line">    vf_losses1 = tf.square(vpred - self.rewards_ph)</span><br><span class="line">    vf_losses2 = tf.square(vpred_clipped - self.rewards_ph)</span><br><span class="line">    self.vf_loss = <span class="number">.5</span> * tf.reduce_mean(tf.maximum(vf_losses1, vf_losses2))</span><br><span class="line"></span><br><span class="line">    ratio = tf.exp(self.old_neglog_pac_ph - neglogpac)</span><br><span class="line">    pg_losses = -self.advs_ph * ratio</span><br><span class="line">    pg_losses2 = -self.advs_ph * tf.clip_by_value(ratio, <span class="number">1.0</span> - self.clip_range_ph, <span class="number">1.0</span> +</span><br><span class="line">                                                  self.clip_range_ph)</span><br><span class="line">    self.pg_loss = tf.reduce_mean(tf.maximum(pg_losses, pg_losses2))</span><br><span class="line">    self.approxkl = <span class="number">.5</span> * tf.reduce_mean(tf.square(neglogpac - self.old_neglog_pac_ph))</span><br><span class="line">    self.clipfrac = tf.reduce_mean(tf.cast(tf.greater(tf.<span class="built_in">abs</span>(ratio - <span class="number">1.0</span>),</span><br><span class="line">                                                      self.clip_range_ph), tf.float32))</span><br><span class="line">    loss = self.pg_loss - self.entropy * self.ent_coef + self.vf_loss * self.vf_coef</span><br><span class="line"></span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;entropy_loss&#x27;</span>, self.entropy)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;policy_gradient_loss&#x27;</span>, self.pg_loss)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;value_function_loss&#x27;</span>, self.vf_loss)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;approximate_kullback-leibler&#x27;</span>, self.approxkl)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;clip_factor&#x27;</span>, self.clipfrac)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;loss&#x27;</span>, loss)</span><br></pre></td></tr></table></figure>
+<p>其中涉及到distribution的部分：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">proba_distribution_from_latent</span>(<span class="params">self, pi_latent_vector, vf_latent_vector, init_scale=<span class="number">1.0</span>, init_bias=<span class="number">0.0</span></span>):</span><br><span class="line">        mean = linear(pi_latent_vector, <span class="string">&#x27;pi&#x27;</span>, self.size, init_scale=init_scale, init_bias=init_bias)</span><br><span class="line">        logstd = tf.get_variable(name=<span class="string">&#x27;pi/logstd&#x27;</span>, shape=[<span class="number">1</span>, self.size], initializer=tf.zeros_initializer())</span><br><span class="line">        pdparam = tf.concat([mean, mean * <span class="number">0.0</span> + logstd], axis=<span class="number">1</span>)</span><br><span class="line">        q_values = linear(vf_latent_vector, <span class="string">&#x27;q&#x27;</span>, self.size, init_scale=init_scale, init_bias=init_bias)</span><br><span class="line">        <span class="keyword">return</span> self.proba_distribution_from_flat(pdparam), mean, q_values</span><br></pre></td></tr></table></figure>
+<p>注：</p>
+<p>（1）_train_step中计算advantage的时候做了归一化：<em>advs = (advs - advs.mean()) / (advs.std() + 1e-8)</em>。（因为这里的adv是包含了每个step下的adv，所以是个向量）</p>
+<p>（2）计算c loss是用value network输出值 - discounted rewards，计算advantage是用discounted rewards - value network输出值，且PPO中没有target network，利用 GAE计算出来的discounted rewards就是target。</p>
+<p>（3）在计算neglogpac和entropy的时候所用的proba_distribution里没有对mean和sigma进行归一化（说明需要在设计网络结构时加上tanh或者在这里将激活函数修改为tanh等），也没有限制logstd的大小。</p>
+<p>（4）value func loss为<em>self.vf_loss = .5 \</em> tf.reduce_mean(tf.maximum(vf_losses1, vf_losses2))*，vf_losses2是对value进行clip后再减去target value，vf_losses1则为没有clip操作的loss。</p>
+<p>（5）计算aloss的时候默认用的是clip，KL散度计算用的是<em>.5 \</em> tf.reduce_mean(tf.square(neglogpac - self.old_neglog_pac_ph))*</p>
+<p>（6）计算梯度的时候用的是<em>loss = self.pg_loss - self.entropy \</em> self.ent_coef + self.vf_loss * self.vf_coef*，既包含了a loss，又包含了c loss，还包括了entropy，因为openAI默认的policy网络结中将actor和critic写在一起（用一个model表示），计算梯度各自只会去找和各自相关的变量（其他变量梯度也是0），所以不会冲突，回传的时候再依次传给对应网络的参数。</p>
+<p>以mlp形式的FeedForwardPolicy为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">FeedForwardPolicy</span>(<span class="title class_ inherited__">ActorCriticPolicy</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Policy object that implements actor critic, using a feed forward neural network.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param sess: (TensorFlow session) The current TensorFlow session</span></span><br><span class="line"><span class="string">    :param ob_space: (Gym Space) The observation space of the environment</span></span><br><span class="line"><span class="string">    :param ac_space: (Gym Space) The action space of the environment</span></span><br><span class="line"><span class="string">    :param n_env: (int) The number of environments to run</span></span><br><span class="line"><span class="string">    :param n_steps: (int) The number of steps to run for each environment</span></span><br><span class="line"><span class="string">    :param n_batch: (int) The number of batch to run (n_envs * n_steps)</span></span><br><span class="line"><span class="string">    :param reuse: (bool) If the policy is reusable or not</span></span><br><span class="line"><span class="string">    :param layers: ([int]) (deprecated, use net_arch instead) The size of the Neural network for the policy</span></span><br><span class="line"><span class="string">        (if None, default to [64, 64])</span></span><br><span class="line"><span class="string">    :param net_arch: (list) Specification of the actor-critic policy network architecture (see mlp_extractor</span></span><br><span class="line"><span class="string">        documentation for details).</span></span><br><span class="line"><span class="string">    :param act_fun: (tf.func) the activation function to use in the neural network.</span></span><br><span class="line"><span class="string">    :param cnn_extractor: (function (TensorFlow Tensor, ``**kwargs``): (TensorFlow Tensor)) the CNN feature extraction</span></span><br><span class="line"><span class="string">    :param feature_extraction: (str) The feature extraction type (&quot;cnn&quot; or &quot;mlp&quot;)</span></span><br><span class="line"><span class="string">    :param kwargs: (dict) Extra keyword arguments for the nature CNN feature extraction</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, sess, ob_space, ac_space, n_env, n_steps, n_batch, reuse=<span class="literal">False</span>, layers=<span class="literal">None</span>, net_arch=<span class="literal">None</span>,</span></span><br><span class="line"><span class="params">                 act_fun=tf.tanh, cnn_extractor=nature_cnn, feature_extraction=<span class="string">&quot;cnn&quot;</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(FeedForwardPolicy, self).__init__(sess, ob_space, ac_space, n_env, n_steps, n_batch, reuse=reuse,</span><br><span class="line">                                                scale=(feature_extraction == <span class="string">&quot;cnn&quot;</span>))</span><br><span class="line"></span><br><span class="line">        self._kwargs_check(feature_extraction, kwargs)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> layers <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            warnings.warn(<span class="string">&quot;Usage of the `layers` parameter is deprecated! Use net_arch instead &quot;</span></span><br><span class="line">                          <span class="string">&quot;(it has a different semantics though).&quot;</span>, DeprecationWarning)</span><br><span class="line">            <span class="keyword">if</span> net_arch <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                warnings.warn(<span class="string">&quot;The new `net_arch` parameter overrides the deprecated `layers` parameter!&quot;</span>,</span><br><span class="line">                              DeprecationWarning)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> net_arch <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">if</span> layers <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                layers = [<span class="number">64</span>, <span class="number">64</span>]</span><br><span class="line">            net_arch = [<span class="built_in">dict</span>(vf=layers, pi=layers)]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;model&quot;</span>, reuse=reuse):</span><br><span class="line">            <span class="keyword">if</span> feature_extraction == <span class="string">&quot;cnn&quot;</span>:</span><br><span class="line">                pi_latent = vf_latent = cnn_extractor(self.processed_obs, **kwargs)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                pi_latent, vf_latent = mlp_extractor(tf.layers.flatten(self.processed_obs), net_arch, act_fun)</span><br><span class="line"></span><br><span class="line">            self._value_fn = linear(vf_latent, <span class="string">&#x27;vf&#x27;</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">            self._proba_distribution, self._policy, self.q_value = \</span><br><span class="line">                self.pdtype.proba_distribution_from_latent(pi_latent, vf_latent, init_scale=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        self._setup_init()</span><br></pre></td></tr></table></figure>
+<p>默认都是[64,64]的网络层，默认的激活函数是tanh。</p>
+<p>PS1：PPO returns计算方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> step <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="built_in">range</span>(<span class="built_in">len</span>(mb_rewards))):</span><br><span class="line">    <span class="keyword">if</span> step == <span class="built_in">len</span>(mb_rewards) - <span class="number">1</span>:</span><br><span class="line">        nextnonterminal = <span class="number">1.0</span> - self.dones</span><br><span class="line">        nextvalues = last_values</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        nextnonterminal = <span class="number">1.0</span> - mb_dones[step + <span class="number">1</span>]</span><br><span class="line">        nextvalues = mb_values[step + <span class="number">1</span>]</span><br><span class="line">    delta = mb_rewards[step] + self.gamma * nextvalues * nextnonterminal - mb_values[step]</span><br><span class="line">    mb_advs[step] = last_gae_lam = delta + self.gamma * self.lam * nextnonterminal * last_gae_lam</span><br><span class="line">mb_returns = mb_advs + mb_values</span><br></pre></td></tr></table></figure>
+<p>注：</p>
+<p>（1）因为没有target网络，所以计算Q target的时候也是用的当前网络的value：mb_values</p>
+<p>（2）mb_values包含了当前网络参数下每个step的value func输出值。用了GAE计算出Advantage（r+gamma*next_V-V），再加上V即得到了TD（lambda）形式的value。</p>
+<p><em>PS：关于上下文管理器中的reuse影响可见博客（<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_29831163/article/details/90202649）">https://blog.csdn.net/qq_29831163/article/details/90202649）</a></em></p>
+<h3 id="SAC"><a href="#SAC" class="headerlink" title="SAC"></a>SAC</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">&quot;loss&quot;</span>, reuse=<span class="literal">False</span>):</span><br><span class="line">    <span class="comment"># Take the min of the two Q-Values (Double-Q Learning)</span></span><br><span class="line">    min_qf_pi = tf.minimum(qf1_pi, qf2_pi)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Target for Q value regression</span></span><br><span class="line">    q_backup = tf.stop_gradient(</span><br><span class="line">        self.rewards_ph +</span><br><span class="line">        (<span class="number">1</span> - self.terminals_ph) * self.gamma * self.value_target</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Compute Q-Function loss</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> test with huber loss (it would avoid too high values)</span></span><br><span class="line">    qf1_loss = <span class="number">0.5</span> * tf.reduce_mean((q_backup - qf1) ** <span class="number">2</span>)</span><br><span class="line">    qf2_loss = <span class="number">0.5</span> * tf.reduce_mean((q_backup - qf2) ** <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Compute the entropy temperature loss</span></span><br><span class="line">    <span class="comment"># it is used when the entropy coefficient is learned</span></span><br><span class="line">    ent_coef_loss, entropy_optimizer = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(self.ent_coef, <span class="built_in">float</span>):</span><br><span class="line">        ent_coef_loss = -tf.reduce_mean(</span><br><span class="line">            self.log_ent_coef * tf.stop_gradient(logp_pi + self.target_entropy))</span><br><span class="line">        entropy_optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_ph)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Compute the policy loss</span></span><br><span class="line">    <span class="comment"># Alternative: policy_kl_loss = tf.reduce_mean(logp_pi - min_qf_pi)</span></span><br><span class="line">    policy_kl_loss = tf.reduce_mean(self.ent_coef * logp_pi - qf1_pi)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># <span class="doctag">NOTE:</span> in the original implementation, they have an additional</span></span><br><span class="line">    <span class="comment"># regularization loss for the Gaussian parameters</span></span><br><span class="line">    <span class="comment"># this is not used for now</span></span><br><span class="line">    <span class="comment"># policy_loss = (policy_kl_loss + policy_regularization_loss)</span></span><br><span class="line">    policy_loss = policy_kl_loss</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Target for value fn regression</span></span><br><span class="line">    <span class="comment"># We update the vf towards the min of two Q-functions in order to</span></span><br><span class="line">    <span class="comment"># reduce overestimation bias from function approximation error.</span></span><br><span class="line">    v_backup = tf.stop_gradient(min_qf_pi - self.ent_coef * logp_pi)</span><br><span class="line">    value_loss = <span class="number">0.5</span> * tf.reduce_mean((value_fn - v_backup) ** <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    values_losses = qf1_loss + qf2_loss + value_loss</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Policy train op</span></span><br><span class="line">    <span class="comment"># (has to be separate from value train op, because min_qf_pi appears in policy_loss)</span></span><br><span class="line">    policy_optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_ph)</span><br><span class="line">    policy_train_op = policy_optimizer.minimize(policy_loss, var_list=tf_util.get_trainable_vars(<span class="string">&#x27;model/pi&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Value train op</span></span><br><span class="line">    value_optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate_ph)</span><br><span class="line">    values_params = tf_util.get_trainable_vars(<span class="string">&#x27;model/values_fn&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    source_params = tf_util.get_trainable_vars(<span class="string">&quot;model/values_fn&quot;</span>)</span><br><span class="line">    target_params = tf_util.get_trainable_vars(<span class="string">&quot;target/values_fn&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Polyak averaging for target variables</span></span><br><span class="line">    self.target_update_op = [</span><br><span class="line">        tf.assign(target, (<span class="number">1</span> - self.tau) * target + self.tau * source)</span><br><span class="line">        <span class="keyword">for</span> target, source <span class="keyword">in</span> <span class="built_in">zip</span>(target_params, source_params)</span><br><span class="line">    ]</span><br><span class="line">    <span class="comment"># Initializing target to match source variables</span></span><br><span class="line">    target_init_op = [</span><br><span class="line">        tf.assign(target, source)</span><br><span class="line">        <span class="keyword">for</span> target, source <span class="keyword">in</span> <span class="built_in">zip</span>(target_params, source_params)</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Control flow is used because sess.run otherwise evaluates in nondeterministic order</span></span><br><span class="line">    <span class="comment"># and we first need to compute the policy action before computing q values losses</span></span><br><span class="line">    <span class="keyword">with</span> tf.control_dependencies([policy_train_op]):</span><br><span class="line">        train_values_op = value_optimizer.minimize(values_losses, var_list=values_params)</span><br><span class="line"></span><br><span class="line">        self.infos_names = [<span class="string">&#x27;policy_loss&#x27;</span>, <span class="string">&#x27;qf1_loss&#x27;</span>, <span class="string">&#x27;qf2_loss&#x27;</span>, <span class="string">&#x27;value_loss&#x27;</span>, <span class="string">&#x27;entropy&#x27;</span>]</span><br><span class="line">        <span class="comment"># All ops to call during one training step</span></span><br><span class="line">        self.step_ops = [policy_loss, qf1_loss, qf2_loss,</span><br><span class="line">                         value_loss, qf1, qf2, value_fn, logp_pi,</span><br><span class="line">                         self.entropy, policy_train_op, train_values_op]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Add entropy coefficient optimization operation if needed</span></span><br><span class="line">        <span class="keyword">if</span> ent_coef_loss <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">with</span> tf.control_dependencies([train_values_op]):</span><br><span class="line">                ent_coef_op = entropy_optimizer.minimize(ent_coef_loss, var_list=self.log_ent_coef)</span><br><span class="line">                self.infos_names += [<span class="string">&#x27;ent_coef_loss&#x27;</span>, <span class="string">&#x27;ent_coef&#x27;</span>]</span><br><span class="line">                self.step_ops += [ent_coef_op, ent_coef_loss, self.ent_coef]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Monitor losses and entropy in tensorboard</span></span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;policy_loss&#x27;</span>, policy_loss)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;qf1_loss&#x27;</span>, qf1_loss)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;qf2_loss&#x27;</span>, qf2_loss)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;value_loss&#x27;</span>, value_loss)</span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;entropy&#x27;</span>, self.entropy)</span><br><span class="line">    <span class="keyword">if</span> ent_coef_loss <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        tf.summary.scalar(<span class="string">&#x27;ent_coef_loss&#x27;</span>, ent_coef_loss)</span><br><span class="line">        tf.summary.scalar(<span class="string">&#x27;ent_coef&#x27;</span>, self.ent_coef)</span><br><span class="line"></span><br><span class="line">    tf.summary.scalar(<span class="string">&#x27;learning_rate&#x27;</span>, tf.reduce_mean(self.learning_rate_ph))</span><br></pre></td></tr></table></figure>
+<p>注：</p>
+<p>（1）openAI的SAC版本的critic网络有1个Value network（需要target）和两个Q-value network（不需要target）。</p>
+<p>（2）value loss是想要value_fn与当前最小q value的min_qf_pi对应的soft value——v_backup（即在min_qf_pi基础上加上当前时刻动作分布的entropy）接近：<em>value_loss = 0.5 \</em> tf.reduce_mean((value_fn - v_backup) <em>* 2)</em></p>
+<p>（3）Q value loss是想qf接近Q target（通过r+gamma*V_target求出Q_target）：</p>
+<p><em>qf1_loss = 0.5 \</em> tf.reduce_mean((q_backup - qf1) <em>* 2)</em></p>
+<p>（3）这里默认的计算policy loss的方式是最大化Q network1对应的Q值同时最大化动作熵，<em>policy_kl_loss = tf.reduce_mean(self.ent_coef \</em> logp_pi - qf1_pi)* 。当然也可以选为最大化min_qf_pi对应的Q值同时最大化动作熵。</p>
+<p>（4）计算value loss的梯度时采用的是所有和value相关的loss：<em>values_losses = qf1_loss + qf2_loss + value_loss</em></p>
+<p>（5）soft更新target参数的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">self.target_update_op = [</span><br><span class="line">    tf.assign(target, (<span class="number">1</span> - self.tau) * target + self.tau * source)</span><br><span class="line">    <span class="keyword">for</span> target, source <span class="keyword">in</span> <span class="built_in">zip</span>(target_params, source_params)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Xu Wan
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://waunx.github.io/2022/05/19/DRL-Loss/" title="SB中常见DRL算法的损失函数设置">https://waunx.github.io/2022/05/19/DRL-Loss/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Code/" rel="tag"># Code</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/17/Property%20Inference-1/" rel="prev" title="模型推断攻击学习笔记（1）">
+      <i class="fa fa-chevron-left"></i> 模型推断攻击学习笔记（1）
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">内容概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DQN"><span class="nav-number">2.</span> <span class="nav-text">DQN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PPO"><span class="nav-number">3.</span> <span class="nav-text">PPO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SAC"><span class="nav-number">4.</span> <span class="nav-text">SAC</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Xu Wan"
+      src="/images/photo.jpg">
+  <p class="site-author-name" itemprop="name">Xu Wan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xu Wan</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">38k</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+-->
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共11.9k字</span>
+  <span class="post-meta-divider">|</span>
+  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+  <span class="post-meta-divider">|</span>
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  <span class="post-meta-divider">|</span>
+  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+</div>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共11.9k字</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
